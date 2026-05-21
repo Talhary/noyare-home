@@ -6,29 +6,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Primary SEO Meta Tags -->
-  <title>Noyare — Professional System Monitor, Telemetry Dashboard & Developer Proxy</title>
-  <meta name="title" content="Noyare — Professional System Monitor, Telemetry Dashboard & Developer Proxy">
+  <title>Noyare — Premium Developer Telemetry Dashboard, Real-time System Monitor & MITM HTTPS Proxy</title>
+  <meta name="title" content="Noyare — Premium Developer Telemetry Dashboard, Real-time System Monitor & MITM HTTPS Proxy">
   <meta name="description"
-    content="A beautiful, lightning-fast developer telemetry dashboard, process monitor, and MITM proxy built with Tauri, Rust, and React. Extremely lightweight, security-aware, and highly extensible.">
+    content="The ultimate all-in-one developer telemetry platform. Monitor logical CPU load grids, capture/intercept HTTPS request payloads with an active MITM proxy, trace network sockets, score process executable trust, and sweep developer build cache files instantly. Built on an ultra-lightweight, high-performance native Rust core.">
   <meta name="keywords"
-    content="noyare, system monitor, telemetry dashboard, mitm proxy, process monitor, windows stats, cpu core grid, developer tools, tauri, rust, react">
-  <meta name="author" content="Talhary">
-  <link rel="canonical" href="https://talhary.github.io/noyare/">
+    content="Developer Telemetry Dashboard, Real-time System Monitor, MITM HTTPS Proxy, Local Port Inspector, Developer Cache Sweeper, Rust Process Monitor, Process Group Terminator, active deep packet inspection, secure binary trust scanner, CPU core scheduler, network socket sniffer, node_modules cleaner, Windows dev tools, security heuristics analyzer, Tauri desktop utility">
+    <meta name="google-site-verification" content="0eyW0zeu_gIlbdkaZUCSYkcfh9fMwwXT3r_XzbgK_aY" />
+  <meta name="author" content="Noyare Inc.">
+  <link rel="canonical" href="https://noyare.com/">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://talhary.github.io/noyare/">
-  <meta property="og:title" content="Noyare — Professional System Monitor & Developer Telemetry Dashboard">
+  <meta property="og:url" content="https://noyare.com/">
+  <meta property="og:title" content="Noyare — Premium Developer Telemetry Dashboard, Real-time System Monitor & MITM HTTPS Proxy">
   <meta property="og:description"
-    content="A beautiful, lightning-fast developer telemetry dashboard, process monitor, and MITM proxy built with Tauri, Rust, and React. Lightweight, security-aware, and highly extensible.">
+    content="Monitor logical CPU grids, intercept HTTPS requests with an active MITM proxy, scan process executable trust, and purge developer cache directories instantly. High-performance native developer utility.">
   <meta property="og:image" content="images/hero-mockup.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://talhary.github.io/noyare/">
-  <meta property="twitter:title" content="Noyare — Professional System Monitor & Developer Telemetry Dashboard">
+  <meta property="twitter:url" content="https://noyare.com/">
+  <meta property="twitter:title" content="Noyare — Premium Developer Telemetry Dashboard, Real-time System Monitor & MITM HTTPS Proxy">
   <meta property="twitter:description"
-    content="A beautiful, lightning-fast developer telemetry dashboard, process monitor, and MITM proxy built with Tauri, Rust, and React. Lightweight, security-aware, and highly extensible.">
+    content="Monitor logical CPU grids, intercept HTTPS requests with an active MITM proxy, scan process executable trust, and purge developer cache directories instantly. High-performance native developer utility.">
   <meta property="twitter:image" content="images/hero-mockup.png">
 
   <!-- Google Fonts (Geist & JetBrains Mono) -->
@@ -212,28 +213,33 @@
       justify-content: center;
     }
 
-    .logo-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--brand);
-      box-shadow: 0 0 12px var(--brand), 0 0 0 3px var(--brand-soft);
-      animation: pulse 2.5s infinite;
+    /* Premium animated SVG logo styles */
+    .logo-svg {
+      display: inline-block;
+      vertical-align: middle;
     }
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        transform: scale(0.9);
-        opacity: 0.8;
-      }
-
-      50% {
-        transform: scale(1.1);
-        opacity: 1;
-        box-shadow: 0 0 16px var(--brand), 0 0 0 5px var(--brand-soft);
-      }
+    .logo-ring-outer {
+      animation: logo-spin 16s linear infinite;
+      transform-origin: center;
+    }
+    .logo-satellite {
+      animation: logo-orbit 5s linear infinite;
+      transform-origin: center;
+    }
+    .logo-core {
+      animation: logo-pulse 2s ease-in-out infinite alternate;
+    }
+    @keyframes logo-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes logo-orbit {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(-360deg); }
+    }
+    @keyframes logo-pulse {
+      0% { r: 3.5; opacity: 0.7; }
+      100% { r: 5; opacity: 1; filter: drop-shadow(0 0 6px var(--brand)); }
     }
 
     .nav-links {
@@ -1330,6 +1336,160 @@
         display: none;
       }
     }
+
+    /* Premium Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 4, 8, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s var(--ease);
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      width: 90%;
+      max-width: 480px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+      position: relative;
+      transform: translateY(20px) scale(0.95);
+      transition: transform 0.3s var(--ease);
+      overflow: hidden;
+    }
+    .modal-overlay.active .modal-card {
+      transform: translateY(0) scale(1);
+    }
+    .modal-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent-gradient);
+    }
+    .modal-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: transparent;
+      border: 0;
+      color: var(--fg-ghost);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.15s ease;
+      line-height: 1;
+    }
+    .modal-close:hover {
+      color: var(--fg);
+    }
+    .modal-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .modal-header h3 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .modal-header p {
+      font-size: 0.95rem;
+      color: var(--fg-mute);
+      line-height: 1.5;
+    }
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .modal-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .modal-input-group label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--fg-faint);
+      font-weight: 600;
+      text-align: left;
+    }
+    .modal-input-group input {
+      background: var(--bg-inset);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      color: var(--fg);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .modal-input-group input:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 10px var(--brand-soft);
+    }
+    .modal-submit {
+      background: var(--accent-gradient);
+      color: #030408;
+      font-weight: 700;
+      border: 0;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+      font-size: 0.95rem;
+    }
+    .modal-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px oklch(0.78 0.12 195 / 0.25);
+    }
+    .modal-success {
+      display: none;
+      text-align: center;
+      padding: 2rem 0;
+      animation: fadeInMock 0.3s ease both;
+    }
+    .modal-success-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--brand-soft);
+      border: 2px solid var(--brand-edge);
+      color: var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1.5rem auto;
+      box-shadow: 0 0 20px var(--brand-soft);
+    }
+    .modal-success h4 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--fg);
+    }
+    .modal-success p {
+      color: var(--fg-mute);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
   </style>
 </head>
 
@@ -1345,7 +1505,14 @@
   <header>
     <div class="nav-container">
       <a href="#" class="logo">
-        <span class="logo-mark"><span class="logo-dot"></span></span>
+        <span class="logo-mark">
+          <svg class="logo-svg" width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="13" stroke="var(--brand)" stroke-width="2.5" stroke-dasharray="6 3" class="logo-ring-outer"></circle>
+            <path d="M16 6C10.4772 6 6 10.4772 6 16C6 21.5228 10.4772 26 16 26" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" class="logo-path-inner"></path>
+            <circle cx="16" cy="16" r="4" fill="var(--brand)" class="logo-core"></circle>
+            <circle cx="26" cy="16" r="2.5" fill="var(--accent)" class="logo-satellite"></circle>
+          </svg>
+        </span>
         Noyare
       </a>
       <nav class="nav-links">
@@ -1354,14 +1521,14 @@
         <a href="#architecture">Architecture</a>
       </nav>
       <div class="nav-right">
-        <a href="https://github.com/Talhary/noyare" class="nav-btn" target="_blank" rel="noopener noreferrer">
-          <svg height="15" width="15" viewBox="0 0 16 16" fill="currentColor">
-            <path
-              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
-            </path>
+        <button onclick="openModal(event)" class="nav-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
           </svg>
-          GitHub
-        </a>
+          Download Pro
+        </button>
       </div>
     </div>
   </header>
@@ -1369,15 +1536,14 @@
   <!-- Hero Section -->
   <section class="hero">
     <div class="badge-container">
-      <span class="badge-text">v0.1.0 pre-release</span>
+      <span class="badge-text">PREMIUM SYSTEM UTILITY — LAUNCHING SOON</span>
     </div>
-    <h1>Professional System Monitor & Telemetry Dashboard for Developers</h1>
-    <p>A beautiful, lightning-fast desktop manager built with Tauri, Rust, and React. Track logical cores, inspect open
-      ports, intercept local API traffic, verify executable trust, and clean developer workspaces instantly.</p>
+    <h1>Ultimate Developer Telemetry Dashboard & Network Debugger</h1>
+    <p>A beautiful, zero-latency desktop monitor built on an ultra-optimized native Rust engine. Track logical CPU scheduling loads, map passive network sockets, intercept local API traffic with an active MITM HTTPS proxy, audit process trust heuristics, and sweep development build waste in one click.</p>
     <div class="hero-ctas">
-      <a href="https://github.com/Talhary/noyare" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-        Get Started
-      </a>
+      <button onclick="openModal(event)" class="btn btn-primary">
+        Download Free Beta
+      </button>
       <a href="#demo" class="btn btn-secondary">
         Explore Interactive Mockup
       </a>
@@ -1394,7 +1560,7 @@
             <span class="dot"></span>
             Noyare
           </div>
-          <span class="mock-tb-pill">v0.1.0 · debug</span>
+          <span class="mock-tb-pill">v1.0.0-pro · premium</span>
         </div>
         <div class="mock-tb-center">DESKTOP-NOYARE (Active)</div>
         <div class="mock-tb-right">
@@ -1946,9 +2112,8 @@
   <!-- Advanced Features Section -->
   <section class="features-section" id="features">
     <div class="section-title">
-      <h2>Engineered for High Performance</h2>
-      <p>Noyare redefines system monitoring by introducing modern, security-centric tools and developer utilities built
-        into a zero-latency native core.</p>
+      <h2>Engineered for Ultimate Diagnostic Control</h2>
+      <p>Noyare redefines system monitoring by introducing modern, security-centric tools and developer utilities built into a zero-latency native Core.</p>
     </div>
 
     <div class="features-grid">
@@ -1956,9 +2121,8 @@
       <div class="feature-card">
         <div class="feature-icon-wrapper">📦</div>
         <div class="feature-info">
-          <h3>Consolidated Process Grouping</h3>
-          <p>Collapses multi-thread helper process trees (like VS Code, Chrome, or Rust build binaries) into an
-            aggregated single row. Expand at will to see specific child process IDs and micro stats.</p>
+          <h3>Consolidated Process Grouping & Concurrent Kill</h3>
+          <p>Collapses complex, multi-thread system and browser families (such as VS Code helpers, Chrome helper clusters, or background compiler binaries) into clean, aggregated parent-child rows. Get deep diagnostic metrics on memory leaks, thread execution states, and CPU core utilization. Terminate nested process families concurrently in a single operation with automatic safe-checks to protect OS stability.</p>
         </div>
       </div>
 
@@ -1966,9 +2130,8 @@
       <div class="feature-card">
         <div class="feature-icon-wrapper">🛡️</div>
         <div class="feature-info">
-          <h3>Automated Security Scoring</h3>
-          <p>Instantly verifies digital signature authenticity of system binaries and queries local safety heuristics.
-            Color-coded badges tag processes as Trusted, Suspect, or Threat processes.</p>
+          <h3>Heuristic Trust & Security Scanner</h3>
+          <p>Analyze and verify the digital signature authenticity, local file metadata, and security integrity of all active binaries instantly. Our intelligent background engine tags processes as Trusted, Suspect, or Threat/Malicious based on signature credentials, protecting your development workspace from untrusted executable compromises.</p>
         </div>
       </div>
 
@@ -1976,21 +2139,17 @@
       <div class="feature-card">
         <div class="feature-icon-wrapper">⚙️</div>
         <div class="feature-info">
-          <h3>Local Proxy & MITM interceptor</h3>
-          <p>An integrated HTTP/HTTPS proxy to capture and review local application API payloads, network requests,
-            headers, and responses in real-time without bulky external software.</p>
+          <h3>Active MITM HTTPS Proxy Debugger</h3>
+          <p>Intercept, inspect, and analyze local HTTP/HTTPS application payloads on the fly. Dynamically capture web requests, generate custom local SSL Certificate Authority keys, view and edit HTTP headers, inject mock responses, and replay API payloads in real-time. No bulky external debuggers or proxy software required.</p>
         </div>
       </div>
 
       <!-- Feature 4 -->
       <div class="feature-card">
-        <div class="feature-icon-wrapper">💾</div>
+        <div class="feature-icon-wrapper">📊</div>
         <div class="feature-info">
-          <h3>Developer Maintenance Cleaner</h3>
-          <p>Scan workspaces to instantly identify gigabytes of forgotten compiled build directories like
-            <code>node_modules</code>, <code>venv</code>, and Cargo <code>target</code> folders and flush them in one
-            sweep.
-          </p>
+          <h3>Logical CPU Scheduler Grid</h3>
+          <p>Visualize scheduler core telemetry and per-processor load balances. Monitor individual CPU load percentages, thread execution queues, per-core clocks, and thermal spikes in a highly beautiful, hardware-integrated real-time panel rendered at a smooth 60 FPS.</p>
         </div>
       </div>
 
@@ -1999,18 +2158,16 @@
         <div class="feature-icon-wrapper">⇄</div>
         <div class="feature-info">
           <h3>Passive Socket & DNS Sniffer</h3>
-          <p>Monitors outbound socket requests and traces local system DNS queries on the fly. Maps external IP targets
-            directly to real-time resolved host domains via a native sniffer.</p>
+          <p>Monitor outbound socket connections and trace local network DNS lookup queries quietly in the background. Dynamically map socket processes and translate external IP addresses directly to real-time resolved domain names via a low-level native sniffer that does not impact throughput.</p>
         </div>
       </div>
 
       <!-- Feature 6 -->
       <div class="feature-card">
-        <div class="feature-icon-wrapper">⚡</div>
+        <div class="feature-icon-wrapper">💾</div>
         <div class="feature-info">
-          <h3>Concurrent Group Kill</h3>
-          <p>Terminate nested application clusters concurrently in a single operation. Protects the operating system by
-            confirming group mass-kills safely with prompt logs.</p>
+          <h3>Developer Maintenance & Build Cache Sweeper</h3>
+          <p>Purge gigabytes of forgotten compiled build directories and local system caches with a single click. Our rapid workspace scanner uncovers obsolete, heavy artifacts (such as forgotten <code>node_modules</code>, Python <code>venv</code> packages, Rust Cargo <code>target</code> compilation waste, and temporary log directories), sweeping them safely in seconds.</p>
         </div>
       </div>
     </div>
@@ -2108,16 +2265,20 @@ pub async fn get_processes() -> Result&lt;Vec&lt;ProcessInfo&gt;, String&gt; {
     <div class="footer-container">
       <div class="footer-brand">
         <span>
-          <span
-            style="width: 8px; height: 8px; background: var(--brand); border-radius: 50%; display: inline-block; box-shadow: 0 0 8px var(--brand);"></span>
+          <svg class="logo-svg" width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 6px;">
+            <circle cx="16" cy="16" r="13" stroke="var(--brand)" stroke-width="2.5" stroke-dasharray="6 3" class="logo-ring-outer"></circle>
+            <circle cx="16" cy="16" r="4" fill="var(--brand)" class="logo-core"></circle>
+          </svg>
           Noyare
         </span>
-        <p>© 2026 Noyare Project.</p>
+        <p>© 2026 Noyare Inc. Premium developer telemetry & monitoring utilities. All rights reserved.</p>
       </div>
-      <!-- <div class="footer-links">
-        <a href="https://github.com/Talhary/noyare" target="_blank" rel="noopener noreferrer">Source Code</a>
-        <a href="https://github.com/Talhary/noyare/issues" target="_blank" rel="noopener noreferrer">Bug Reports</a>
-      </div> -->
+      <div class="footer-links">
+        <a href="#" onclick="openModal(event)">Download Pro</a>
+        <a href="#" onclick="openModal(event)">Enterprise Licensing</a>
+        <a href="#" onclick="alert('Support: contact support@noyare.com')">Support Contact</a>
+        <a href="#" onclick="alert('Noyare is a commercial proprietary software product protected by standard software licensing agreements.')">Terms & Licensing</a>
+      </div>
     </div>
   </footer>
 
@@ -2314,7 +2475,55 @@ pub async fn get_processes() -> Result&lt;Vec&lt;ProcessInfo&gt;, String&gt; {
       document.querySelectorAll('.arch-code-block').forEach(el => el.classList.remove('active'));
       document.getElementById('code-' + tabId).classList.add('active');
     }
+
+    // 7. Launch Soon Modal Functions
+    function openModal(e) {
+      if (e) e.preventDefault();
+      document.getElementById('launch-modal').classList.add('active');
+    }
+    
+    function closeModal() {
+      document.getElementById('launch-modal').classList.remove('active');
+      // Reset form view
+      setTimeout(() => {
+        document.getElementById('waitlist-form').style.display = 'flex';
+        document.getElementById('waitlist-success').style.display = 'none';
+        document.getElementById('waitlist-email').value = '';
+      }, 300);
+    }
+    
+    function handleWaitlistSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('waitlist-email').value;
+      if (email) {
+        document.getElementById('waitlist-form').style.display = 'none';
+        document.getElementById('waitlist-success').style.display = 'block';
+      }
+    }
   </script>
+
+  <!-- Launch Soon Modal Overlay -->
+  <div class="modal-overlay" id="launch-modal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="modal-header">
+        <h3>Noyare Professional</h3>
+        <p>The ultimate system telemetry & developer proxy suite is launching soon. Join the early access waitlist to reserve your slot and download the beta.</p>
+      </div>
+      <form class="modal-form" id="waitlist-form" onsubmit="handleWaitlistSubmit(event)">
+        <div class="modal-input-group">
+          <label for="waitlist-email">Email Address</label>
+          <input type="email" id="waitlist-email" placeholder="you@company.com" required>
+        </div>
+        <button type="submit" class="modal-submit">Reserve Early Access</button>
+      </form>
+      <div class="modal-success" id="waitlist-success">
+        <div class="modal-success-icon">✓</div>
+        <h4>You've reserved your slot!</h4>
+        <p>Thank you for your interest. We will email you with your private access key and download link as soon as the next beta batch opens.</p>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
