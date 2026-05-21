@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary SEO Meta Tags -->
+  <title>Noyare — Professional System Monitor, Telemetry Dashboard & Developer Proxy</title>
+  <meta name="title" content="Noyare — Professional System Monitor, Telemetry Dashboard & Developer Proxy">
+  <meta name="description"
+    content="A beautiful, lightning-fast developer telemetry dashboard, process monitor, and MITM proxy built with Tauri, Rust, and React. Extremely lightweight, security-aware, and highly extensible.">
+  <meta name="keywords"
+    content="noyare, system monitor, telemetry dashboard, mitm proxy, process monitor, windows stats, cpu core grid, developer tools, tauri, rust, react">
+  <meta name="author" content="Talhary">
+  <link rel="canonical" href="https://talhary.github.io/noyare/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://talhary.github.io/noyare/">
+  <meta property="og:title" content="Noyare — Professional System Monitor & Developer Telemetry Dashboard">
+  <meta property="og:description"
+    content="A beautiful, lightning-fast developer telemetry dashboard, process monitor, and MITM proxy built with Tauri, Rust, and React. Lightweight, security-aware, and highly extensible.">
+  <meta property="og:image" content="images/hero-mockup.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://talhary.github.io/noyare/">
+  <meta property="twitter:title" content="Noyare — Professional System Monitor & Developer Telemetry Dashboard">
+  <meta property="twitter:description"
+    content="A beautiful, lightning-fast developer telemetry dashboard, process monitor, and MITM proxy built with Tauri, Rust, and React. Lightweight, security-aware, and highly extensible.">
+  <meta property="twitter:image" content="images/hero-mockup.png">
+
+  <!-- Google Fonts (Geist & JetBrains Mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* Design System & Color Tokens (Matching Noyare's exact OKLCH values translated to CSS variables) */
+    :root {
+      --brand: oklch(0.78 0.12 195);
+      /* electric teal/cyan */
+      --brand-soft: oklch(0.78 0.12 195 / 0.1);
+      --brand-edge: oklch(0.78 0.12 195 / 0.3);
+      --accent: oklch(0.68 0.16 285);
+      /* violet */
+      --accent-soft: oklch(0.68 0.16 285 / 0.12);
+
+      --ok: oklch(0.74 0.14 145);
+      --warn: oklch(0.82 0.14 85);
+      --bad: oklch(0.66 0.18 18);
+      --info: oklch(0.72 0.13 270);
+
+      --bg: oklch(0.16 0.008 240);
+      --bg-elev: oklch(0.19 0.008 240);
+      --bg-panel: oklch(0.20 0.008 240);
+      --bg-inset: oklch(0.14 0.008 240);
+      --bg-hover: oklch(0.23 0.008 240);
+      --bg-active: oklch(0.26 0.01 240);
+
+      --line: oklch(0.30 0.008 240 / 0.5);
+      --line-soft: oklch(0.30 0.008 240 / 0.25);
+
+      --fg: oklch(0.96 0.005 240);
+      --fg-mute: oklch(0.78 0.008 240);
+      --fg-faint: oklch(0.58 0.008 240);
+      --fg-ghost: oklch(0.42 0.008 240);
+
+      --radius: 10px;
+      --radius-lg: 14px;
+      --accent-gradient: linear-gradient(135deg, var(--accent) 0%, var(--brand) 100%);
+      --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--bg-hover);
+      border-radius: 999px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: "Geist", -apple-system, system-ui, sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .mono {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.9em;
+    }
+
+    /* Ambient Background Glows */
+    .glow-container {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .glow-orb-1 {
+      position: absolute;
+      top: -300px;
+      left: 20%;
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(108, 92, 246, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+      filter: blur(120px);
+      animation: floatOrbs 25s infinite alternate;
+    }
+
+    .glow-orb-2 {
+      position: absolute;
+      top: 400px;
+      right: 15%;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.06) 0%, rgba(0, 0, 0, 0) 70%);
+      filter: blur(100px);
+      animation: floatOrbs 30s infinite alternate-reverse;
+    }
+
+    @keyframes floatOrbs {
+      0% {
+        transform: translateY(0) scale(1);
+      }
+
+      100% {
+        transform: translateY(80px) scale(1.15);
+      }
+    }
+
+    /* Typography */
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s var(--ease);
+    }
+
+    /* Header & Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line-soft);
+      background: rgba(22, 24, 37, 0.75);
+    }
+
+    .nav-container {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0.85rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .logo-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 12px var(--brand), 0 0 0 3px var(--brand-soft);
+      animation: pulse 2.5s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(0.9);
+        opacity: 0.8;
+      }
+
+      50% {
+        transform: scale(1.1);
+        opacity: 1;
+        box-shadow: 0 0 16px var(--brand), 0 0 0 5px var(--brand-soft);
+      }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--fg-mute);
+    }
+
+    .nav-links a:hover {
+      color: var(--fg);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-inset);
+      transition: all 0.2s var(--ease);
+    }
+
+    .nav-btn:hover {
+      border-color: var(--brand-edge);
+      background: var(--bg-hover);
+      color: var(--fg);
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5.5rem 2rem 3rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .badge-container {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      background: var(--brand-soft);
+      border: 1px solid var(--brand-edge);
+      border-radius: 9999px;
+      margin-bottom: 2rem;
+    }
+
+    .badge-text {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--brand);
+    }
+
+    .hero h1 {
+      font-size: 3.6rem;
+      line-height: 1.15;
+      font-weight: 700;
+      max-width: 960px;
+      margin: 0 auto 1.5rem auto;
+      letter-spacing: -0.03em;
+      background: linear-gradient(180deg, #ffffff 30%, oklch(0.85 0.05 240) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--fg-mute);
+      max-width: 720px;
+      margin: 0 auto 2.5rem auto;
+      line-height: 1.6;
+    }
+
+    .hero-ctas {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-bottom: 4.5rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.6rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+      border: 0;
+      background: var(--bg-inset);
+      color: var(--fg);
+    }
+
+    .btn-primary {
+      background: var(--accent-gradient);
+      color: #030408;
+      font-weight: 600;
+      box-shadow: 0 4px 20px oklch(0.78 0.12 195 / 0.18);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px oklch(0.78 0.12 195 / 0.3);
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--line);
+      background: var(--bg-elev);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--fg-faint);
+      background: var(--bg-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Core Metrics Strip */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1320px;
+      margin: 0 auto 5rem auto;
+      padding: 0 2rem;
+    }
+
+    .metric-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius-lg);
+      padding: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .metric-card::before {
+      content: "";
+      position: absolute;
+      left: 1.8rem;
+      right: 1.8rem;
+      top: 0;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, var(--brand-edge), transparent);
+    }
+
+    .metric-num {
+      font-size: 2.4rem;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--brand);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-title {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--fg);
+    }
+
+    .metric-desc {
+      font-size: 0.88rem;
+      color: var(--fg-mute);
+      line-height: 1.45;
+    }
+
+    /* Interactive UI Showcase Frame */
+    .showcase-section {
+      max-width: 1320px;
+      margin: 2rem auto 6rem auto;
+      padding: 0 2rem;
+    }
+
+    .tauri-window-mock {
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+      display: flex;
+      flex-direction: column;
+      height: 640px;
+      position: relative;
+    }
+
+    /* Mock window title bar */
+    .mock-titlebar {
+      height: 40px;
+      background: var(--bg-inset);
+      border-bottom: 1px solid var(--line-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      user-select: none;
+    }
+
+    .mock-tb-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mock-tb-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .mock-tb-mark .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 0 3px var(--brand-soft);
+    }
+
+    .mock-tb-pill {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      color: var(--fg-faint);
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .mock-tb-center {
+      font-size: 12px;
+      color: var(--fg-faint);
+      letter-spacing: 0.02em;
+    }
+
+    .mock-tb-right {
+      display: flex;
+      gap: 8px;
+    }
+
+    .mock-tb-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      opacity: 0.35;
+    }
+
+    .mock-tb-dot.red {
+      background-color: var(--bad);
+    }
+
+    .mock-tb-dot.yellow {
+      background-color: var(--warn);
+    }
+
+    .mock-tb-dot.green {
+      background-color: var(--ok);
+    }
+
+    /* Mock window layout */
+    .mock-body {
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* Mock Sidebar */
+    .mock-sidebar {
+      background: var(--bg-inset);
+      border-right: 1px solid var(--line-soft);
+      padding: 1.25rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .mock-sb-section {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 10px;
+      color: var(--fg-ghost);
+      padding: 12px 10px 6px;
+      font-weight: 600;
+    }
+
+    .mock-sb-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      color: var(--fg-mute);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s var(--ease);
+      background: transparent;
+      border: 0;
+      width: 100%;
+      text-align: left;
+    }
+
+    .mock-sb-item:hover {
+      background: var(--bg-hover);
+      color: var(--fg);
+    }
+
+    .mock-sb-item.active {
+      background: var(--bg-active);
+      color: var(--fg);
+    }
+
+    .mock-sb-item.active::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 2px;
+      height: 16px;
+      background: var(--brand);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .mock-sb-icon {
+      font-size: 14px;
+      width: 18px;
+      text-align: center;
+    }
+
+    .mock-sb-badge {
+      margin-left: auto;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      color: var(--fg-faint);
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: var(--bg-inset);
+    }
+
+    .mock-sb-footer {
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--line-soft);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      color: var(--fg-ghost);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-left: 8px;
+    }
+
+    /* Mock Content Panel */
+    .mock-content {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      background: var(--bg-panel);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      min-height: 0;
+    }
+
+    .mock-pane {
+      display: none;
+      flex-direction: column;
+      gap: 1.25rem;
+      animation: fadeInMock 0.25s var(--ease) both;
+    }
+
+    .mock-pane.active {
+      display: flex;
+    }
+
+    @keyframes fadeInMock {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .mock-page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 1px solid var(--line-soft);
+      padding-bottom: 0.85rem;
+    }
+
+    .mock-page-head h2 {
+      font-size: 1.6rem;
+      font-weight: 500;
+    }
+
+    .mock-page-head .crumb {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      color: var(--fg-ghost);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* Cards */
+    .mock-card {
+      background: var(--bg-inset);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      position: relative;
+    }
+
+    .mock-card.glow-top::before {
+      content: "";
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--brand-edge), transparent);
+    }
+
+    .mock-card-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--fg-ghost);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    /* Dashboard Grid Panels */
+    .mock-dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .mock-metric {
+      font-size: 2.2rem;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .mock-metric .unit {
+      font-size: 13px;
+      color: var(--fg-faint);
+      margin-left: 2px;
+    }
+
+    .mock-cores-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .mock-core {
+      aspect-ratio: 1;
+      background: var(--bg-panel);
+      border-radius: 6px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line-soft);
+    }
+
+    .mock-core-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 8.5px;
+      color: var(--fg-ghost);
+    }
+
+    .mock-core-pct {
+      font-size: 11px;
+      font-weight: 500;
+      align-self: flex-end;
+      font-variant-numeric: tabular-nums;
+      z-index: 1;
+    }
+
+    .mock-core-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      background: var(--brand);
+      transition: width 0.5s ease;
+    }
+
+    /* Progress bar */
+    .mock-progress-bar {
+      height: 6px;
+      background: var(--bg-panel);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+      margin-top: 10px;
+      border: 1px solid var(--line-soft);
+    }
+
+    .mock-progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 999px;
+      width: 58%;
+      transition: width 0.5s ease;
+    }
+
+    /* Tables */
+    .mock-table-wrap {
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg-inset);
+    }
+
+    .mock-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      text-align: left;
+    }
+
+    .mock-table th {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--fg-ghost);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--line-soft);
+      background: rgba(255, 255, 255, 0.02);
+      font-weight: 600;
+    }
+
+    .mock-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line-soft);
+      vertical-align: middle;
+    }
+
+    .mock-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .mock-table tbody tr {
+      cursor: pointer;
+      transition: background 0.1s ease;
+    }
+
+    .mock-table tbody tr:hover {
+      background: var(--bg-hover);
+    }
+
+    .mock-table tbody tr.selected {
+      background: var(--brand-soft);
+    }
+
+    .mock-table .num {
+      font-family: "JetBrains Mono", monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Badges */
+    .mock-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 9.5px;
+      font-weight: 500;
+      padding: 1px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .mock-badge.ok {
+      color: var(--ok);
+      background: oklch(from var(--ok) l c h / 0.12);
+    }
+
+    .mock-badge.warn {
+      color: var(--warn);
+      background: oklch(from var(--warn) l c h / 0.12);
+    }
+
+    .mock-badge.bad {
+      color: var(--bad);
+      background: oklch(from var(--bad) l c h / 0.12);
+    }
+
+    .mock-badge.info {
+      color: var(--info);
+      background: oklch(from var(--info) l c h / 0.12);
+    }
+
+    .mock-chevron {
+      display: inline-block;
+      width: 12px;
+      transition: transform 0.15s ease;
+      color: var(--fg-ghost);
+    }
+
+    .mock-chevron.expanded {
+      transform: rotate(90deg);
+    }
+
+    /* Process Panel Utilities */
+    .mock-filter-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .mock-input {
+      background: var(--bg-inset);
+      border: 1px solid var(--line-soft);
+      border-radius: 6px;
+      padding: 6px 10px;
+      color: var(--fg);
+      outline: none;
+      font-size: 12.5px;
+      flex: 1;
+      transition: border-color 0.15s ease;
+    }
+
+    .mock-input:focus {
+      border-color: var(--brand-edge);
+    }
+
+    .mock-btn {
+      background: var(--bg-hover);
+      border: 1px solid var(--line-soft);
+      border-radius: 6px;
+      padding: 6px 12px;
+      color: var(--fg);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .mock-btn:hover {
+      background: var(--bg-active);
+      border-color: var(--brand-edge);
+    }
+
+    .mock-btn.danger {
+      background: oklch(from var(--bad) l c h / 0.12);
+      color: var(--bad);
+      border-color: oklch(from var(--bad) l c h / 0.25);
+    }
+
+    .mock-btn.danger:hover {
+      background: oklch(from var(--bad) l c h / 0.2);
+    }
+
+    /* Split layout for Proxy and Analyzer */
+    .mock-split {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1rem;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .mock-detail-pane {
+      background: var(--bg-inset);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .mock-detail-empty {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--fg-ghost);
+      font-size: 12px;
+      border: 1px dashed var(--line-soft);
+      border-radius: 8px;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .mock-req-intercept {
+      background: rgba(239, 68, 68, 0.05);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 6px;
+      padding: 10px;
+      color: var(--bad);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mock-req-intercept-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--bad);
+      box-shadow: 0 0 8px var(--bad);
+      animation: pulse 1.5s infinite;
+    }
+
+    /* Storage Tabs Inside Pane */
+    .mock-tabs {
+      display: inline-flex;
+      background: var(--bg-inset);
+      border-radius: 8px;
+      padding: 2.5px;
+      gap: 2px;
+      align-self: flex-start;
+      border: 1px solid var(--line-soft);
+    }
+
+    .mock-tab {
+      background: transparent;
+      border: 0;
+      color: var(--fg-mute);
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+
+    .mock-tab.active {
+      background: var(--bg-panel);
+      color: var(--fg);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Sweeping particle animation overlay */
+    .sweep-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 4, 8, 0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      gap: 12px;
+    }
+
+    .sweep-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sweep-spinner {
+      width: 32px;
+      height: 32px;
+      border: 2px solid var(--brand-soft);
+      border-top-color: var(--brand);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Features Grid Section */
+    .features-section {
+      max-width: 1320px;
+      margin: 4rem auto 6rem auto;
+      padding: 0 2rem;
+    }
+
+    .section-title {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 3.5rem auto;
+    }
+
+    .section-title h2 {
+      font-size: 2.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-title p {
+      font-size: 1.1rem;
+      color: var(--fg-mute);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: all 0.25s var(--ease);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .feature-card::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--accent-gradient);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--brand-edge);
+      box-shadow: 0 12px 30px -10px rgba(0, 240, 255, 0.08);
+    }
+
+    .feature-card:hover::after {
+      opacity: 1;
+    }
+
+    .feature-icon-wrapper {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--brand-soft);
+      border: 1px solid var(--brand-edge);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand);
+      font-size: 1.25rem;
+    }
+
+    .feature-card:nth-child(2n) .feature-icon-wrapper {
+      background: var(--accent-soft);
+      border: 1px solid rgba(108, 92, 246, 0.2);
+      color: var(--accent);
+    }
+
+    .feature-info h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-info p {
+      font-size: 0.92rem;
+      color: var(--fg-mute);
+      line-height: 1.5;
+    }
+
+    /* Architecture Tabs Section */
+    .arch-section {
+      background: var(--bg-inset);
+      border-top: 1px solid var(--line-soft);
+      border-bottom: 1px solid var(--line-soft);
+      padding: 6rem 2rem;
+    }
+
+    .arch-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .arch-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .arch-text h2 {
+      font-size: 2.2rem;
+    }
+
+    .arch-tab-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .arch-tab-btn {
+      background: transparent;
+      border: 0;
+      text-align: left;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius);
+      color: var(--fg-mute);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: all 0.2s ease;
+      border-left: 2px solid transparent;
+    }
+
+    .arch-tab-btn:hover {
+      background: var(--bg-hover);
+      color: var(--fg);
+    }
+
+    .arch-tab-btn.active {
+      background: var(--bg-panel);
+      color: var(--fg);
+      border-left-color: var(--brand);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .arch-tab-btn-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .arch-tab-btn-desc {
+      font-size: 0.85rem;
+      color: var(--fg-faint);
+    }
+
+    .arch-code-block {
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      position: relative;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+
+    .arch-code-block.active {
+      display: block;
+      animation: fadeInMock 0.3s ease both;
+    }
+
+    .arch-code-header {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--fg-ghost);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--line-soft);
+      padding: 5rem 2rem;
+      background-color: var(--bg-inset);
+    }
+
+    .footer-container {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .footer-brand span {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--fg);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: var(--fg-faint);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      font-size: 0.9rem;
+      color: var(--fg-mute);
+    }
+
+    .footer-links a:hover {
+      color: var(--fg);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+      .arch-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .mock-body {
+        grid-template-columns: 1fr;
+      }
+
+      .mock-sidebar {
+        display: none;
+        /* simple display for small screens */
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.4rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+      }
+
+      .hero-ctas {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .mock-dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mock-split {
+        grid-template-columns: 1fr;
+      }
+
+      .mock-detail-pane {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Background Orbs -->
+  <div class="glow-container">
+    <div class="glow-orb-1"></div>
+    <div class="glow-orb-2"></div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <span class="logo-mark"><span class="logo-dot"></span></span>
+        Noyare
+      </a>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#demo">Live Simulation</a>
+        <a href="#architecture">Architecture</a>
+      </nav>
+      <div class="nav-right">
+        <a href="https://github.com/Talhary/noyare" class="nav-btn" target="_blank" rel="noopener noreferrer">
+          <svg height="15" width="15" viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+            </path>
+          </svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="badge-container">
+      <span class="badge-text">v0.1.0 pre-release</span>
+    </div>
+    <h1>Professional System Monitor & Telemetry Dashboard for Developers</h1>
+    <p>A beautiful, lightning-fast desktop manager built with Tauri, Rust, and React. Track logical cores, inspect open
+      ports, intercept local API traffic, verify executable trust, and clean developer workspaces instantly.</p>
+    <div class="hero-ctas">
+      <a href="https://github.com/Talhary/noyare" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+        Get Started
+      </a>
+      <a href="#demo" class="btn btn-secondary">
+        Explore Interactive Mockup
+      </a>
+    </div>
+  </section>
+
+  <!-- Live UI Interactive Showcase Section -->
+  <section class="showcase-section" id="demo">
+    <div class="tauri-window-mock">
+      <!-- Mock Titlebar -->
+      <div class="mock-titlebar">
+        <div class="mock-tb-left">
+          <div class="mock-tb-mark">
+            <span class="dot"></span>
+            Noyare
+          </div>
+          <span class="mock-tb-pill">v0.1.0 · debug</span>
+        </div>
+        <div class="mock-tb-center">DESKTOP-NOYARE (Active)</div>
+        <div class="mock-tb-right">
+          <div class="mock-tb-dot green"></div>
+          <div class="mock-tb-dot yellow"></div>
+          <div class="mock-tb-dot red"></div>
+        </div>
+      </div>
+
+      <!-- Mock Application Body -->
+      <div class="mock-body">
+
+        <!-- Sidebar Navigation -->
+        <aside class="mock-sidebar">
+          <div class="mock-sb-section">Workspace</div>
+          <button class="mock-sb-item active" onclick="switchMockPane('dashboard', this)">
+            <span class="mock-sb-icon">📊</span>
+            <span>Dashboard</span>
+          </button>
+          <button class="mock-sb-item" onclick="switchMockPane('processes', this)">
+            <span class="mock-sb-icon">🖥️</span>
+            <span>Processes</span>
+            <span class="mock-sb-badge" id="mock-badge-proc">4</span>
+          </button>
+          <button class="mock-sb-item" onclick="switchMockPane('network', this)">
+            <span class="mock-sb-icon">⇄</span>
+            <span>Network</span>
+            <span class="mock-sb-badge">3</span>
+          </button>
+          <button class="mock-sb-item" onclick="switchMockPane('storage', this)">
+            <span class="mock-sb-icon">💾</span>
+            <span>Storage</span>
+          </button>
+
+          <div class="mock-sb-section">Tools</div>
+          <button class="mock-sb-item" onclick="switchMockPane('proxy', this)">
+            <span class="mock-sb-icon">🛡️</span>
+            <span>Proxy Intercept</span>
+          </button>
+
+          <div class="mock-sb-footer">
+            <span
+              style="color: var(--fg-ghost); font-size: 8px; text-transform: uppercase; letter-spacing: 0.08em;">Host
+              Machine</span>
+            <span style="color: var(--fg-mute);">win32-x64-pc</span>
+          </div>
+        </aside>
+
+        <!-- Main Workspace Panels -->
+        <main class="mock-content">
+
+          <!-- Sweep Cleaner overlay -->
+          <div class="sweep-overlay" id="sweep-loader">
+            <div class="sweep-spinner"></div>
+            <div style="font-weight: 500; font-size: 14px; color: var(--brand);">Sweeping workspace files...</div>
+            <div style="font-size: 11px; color: var(--fg-faint);" id="sweep-path-text">node_modules</div>
+          </div>
+
+          <!-- PANEL 1: DASHBOARD -->
+          <div class="mock-pane active" id="pane-dashboard">
+            <div class="mock-page-head">
+              <div>
+                <span class="crumb">System Overview</span>
+                <h2>Dashboard</h2>
+              </div>
+              <span class="mock-badge info">500ms refresh</span>
+            </div>
+
+            <div class="mock-dashboard-grid">
+              <div class="mock-card glow-top" style="grid-column: span 2;">
+                <span class="mock-card-title">Logical Processors Load — 14.5%</span>
+                <div class="mock-cores-grid" id="dashboard-cores">
+                  <!-- JS builds 16 cores -->
+                </div>
+              </div>
+
+              <div class="mock-card">
+                <span class="mock-card-title">System Memory</span>
+                <div class="mock-metric">8.4<span class="unit">GB</span></div>
+                <div style="font-size: 11px; color: var(--fg-mute); margin-top: 4px;">Used: 52% of 16.0 GB</div>
+                <div class="mock-progress-bar">
+                  <div class="mock-progress-fill" id="dashboard-mem-bar" style="width: 52%;"></div>
+                </div>
+              </div>
+
+              <div class="mock-card glow-top">
+                <span class="mock-card-title">Network IO</span>
+                <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 8px;">
+                  <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                    <span style="color: var(--ok)">▼ Download:</span>
+                    <span class="mono" id="mock-net-rx">124.5 KB/s</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                    <span style="color: var(--brand)">▲ Upload:</span>
+                    <span class="mono" id="mock-net-tx">18.2 KB/s</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mock-card" style="grid-column: span 2;">
+                <span class="mock-card-title">Active Disks IO rates</span>
+                <div
+                  style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px; font-size: 12px;">
+                  <span class="mono" style="font-weight: 500;">NVMe Drive C:\</span>
+                  <div class="mono" style="display: flex; gap: 16px;">
+                    <span style="color: var(--ok);">Read: 1.2 MB/s</span>
+                    <span style="color: var(--accent);">Write: 24.1 KB/s</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL 2: PROCESSES -->
+          <div class="mock-pane" id="pane-processes">
+            <div class="mock-page-head">
+              <div>
+                <span class="crumb">Clustered Process Trees</span>
+                <h2>Processes</h2>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="mock-btn danger" onclick="simulateKillProcess()">
+                  Terminate Selected
+                </button>
+              </div>
+            </div>
+
+            <div class="mock-filter-row">
+              <input type="text" class="mock-input" id="proc-filter"
+                placeholder="Search processes by Name, PID, or Executable path..." oninput="filterMockProcesses()">
+              <button class="mock-btn">Filters</button>
+            </div>
+
+            <div class="mock-table-wrap" style="max-height: 380px; overflow-y: auto;">
+              <table class="mock-table" id="mock-proc-table">
+                <thead>
+                  <tr>
+                    <th style="width: 70px;">PID</th>
+                    <th style="width: 220px;">Name</th>
+                    <th style="width: 80px; text-align: right;">CPU</th>
+                    <th style="width: 100px; text-align: right;">Memory</th>
+                    <th>Executable Path</th>
+                    <th style="width: 100px; text-align: center;">Trust</th>
+                  </tr>
+                </thead>
+                <tbody id="proc-tbody">
+                  <!-- Row 1: Clustered Group Parent -->
+                  <tr class="parent-row" data-name="Code.exe" onclick="toggleMockGroup('vscode', this)">
+                    <td class="num" style="opacity: 0.5;">3488*</td>
+                    <td>
+                      <span class="mock-chevron" id="chev-vscode">▶</span>
+                      <span style="font-weight: 600;">Code.exe</span>
+                      <span
+                        style="font-size: 9px; padding: 1px 4px; background: rgba(255,255,255,0.06); border-radius: 4px; font-weight: bold; margin-left: 4px;">3</span>
+                    </td>
+                    <td class="num" style="text-align: right; font-weight: 600;">2.4%</td>
+                    <td class="num" style="text-align: right;">284.1 MB</td>
+                    <td style="opacity: 0.7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                      title="C:\Users\Developer\AppData\Local\Programs\Microsoft VS Code\Code.exe">
+                      C:\Users\Developer\AppData\Local\Programs\Microsoft VS Code\Code.exe</td>
+                    <td style="text-align: center;"><span class="mock-badge ok">Trusted</span></td>
+                  </tr>
+
+                  <!-- Children of VS Code (hidden by default) -->
+                  <tr class="child-row-vscode" style="display: none; background: rgba(255,255,255,0.015);"
+                    onclick="selectMockRow(this)">
+                    <td class="num">3488</td>
+                    <td style="padding-left: 24px; opacity: 0.85;">Code.exe (GPU helper)</td>
+                    <td class="num" style="text-align: right;">1.2%</td>
+                    <td class="num" style="text-align: right;">110.5 MB</td>
+                    <td style="opacity: 0.5;">C:\Users\Developer\AppData\Local\Programs\Microsoft VS Code\Code.exe</td>
+                    <td style="text-align: center;"><span class="mock-badge ok">Trusted</span></td>
+                  </tr>
+                  <tr class="child-row-vscode" style="display: none; background: rgba(255,255,255,0.015);"
+                    onclick="selectMockRow(this)">
+                    <td class="num">9920</td>
+                    <td style="padding-left: 24px; opacity: 0.85;">Code.exe (Extension host)</td>
+                    <td class="num" style="text-align: right;">0.8%</td>
+                    <td class="num" style="text-align: right;">98.2 MB</td>
+                    <td style="opacity: 0.5;">C:\Users\Developer\AppData\Local\Programs\Microsoft VS Code\Code.exe</td>
+                    <td style="text-align: center;"><span class="mock-badge ok">Trusted</span></td>
+                  </tr>
+                  <tr class="child-row-vscode" style="display: none; background: rgba(255,255,255,0.015);"
+                    onclick="selectMockRow(this)">
+                    <td class="num">1120</td>
+                    <td style="padding-left: 24px; opacity: 0.85;">Code.exe (Utility buffer)</td>
+                    <td class="num" style="text-align: right;">0.4%</td>
+                    <td class="num" style="text-align: right;">75.4 MB</td>
+                    <td style="opacity: 0.5;">C:\Users\Developer\AppData\Local\Programs\Microsoft VS Code\Code.exe</td>
+                    <td style="text-align: center;"><span class="mock-badge ok">Trusted</span></td>
+                  </tr>
+
+                  <!-- Row 2: Standard single process -->
+                  <tr class="parent-row" data-name="rustc.exe" onclick="selectMockRow(this)">
+                    <td class="num">4021</td>
+                    <td>
+                      <span class="mock-chevron" style="opacity: 0;">▶</span>
+                      <span style="font-weight: 600;">rustc.exe</span>
+                    </td>
+                    <td class="num" style="text-align: right; font-weight: 600;">0.0%</td>
+                    <td class="num" style="text-align: right;">44.8 MB</td>
+                    <td style="opacity: 0.7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                      C:\Users\Developer\.cargo\bin\rustc.exe</td>
+                    <td style="text-align: center;"><span class="mock-badge ok">Trusted</span></td>
+                  </tr>
+
+                  <!-- Row 3: Clustered Chrome -->
+                  <tr class="parent-row" data-name="chrome.exe" onclick="toggleMockGroup('chrome', this)">
+                    <td class="num" style="opacity: 0.5;">8112*</td>
+                    <td>
+                      <span class="mock-chevron" id="chev-chrome">▶</span>
+                      <span style="font-weight: 600;">chrome.exe</span>
+                      <span
+                        style="font-size: 9px; padding: 1px 4px; background: rgba(255,255,255,0.06); border-radius: 4px; font-weight: bold; margin-left: 4px;">2</span>
+                    </td>
+                    <td class="num" style="text-align: right; font-weight: 600;">11.8%</td>
+                    <td class="num" style="text-align: right;">620.4 MB</td>
+                    <td style="opacity: 0.7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">C:\Program
+                      Files\Google\Chrome\Application\chrome.exe</td>
+                    <td style="text-align: center;"><span class="mock-badge ok">Trusted</span></td>
+                  </tr>
+
+                  <!-- Children of Chrome (hidden by default) -->
+                  <tr class="child-row-chrome" style="display: none; background: rgba(255,255,255,0.015);"
+                    onclick="selectMockRow(this)">
+                    <td class="num">8112</td>
+                    <td style="padding-left: 24px; opacity: 0.85;">chrome.exe (Core helper)</td>
+                    <td class="num" style="text-align: right;">3.9%</td>
+                    <td class="num" style="text-align: right;">250.0 MB</td>
+                    <td style="opacity: 0.5;">C:\Program Files\Google\Chrome\Application\chrome.exe</td>
+                    <td style="text-align: center;"><span class="mock-badge ok">Trusted</span></td>
+                  </tr>
+                  <tr class="child-row-chrome" style="display: none; background: rgba(255,255,255,0.015);"
+                    onclick="selectMockRow(this)">
+                    <td class="num">5104</td>
+                    <td style="padding-left: 24px; opacity: 0.85;">chrome.exe (Tab: Github)</td>
+                    <td class="num" style="text-align: right;">7.9%</td>
+                    <td class="num" style="text-align: right;">370.4 MB</td>
+                    <td style="opacity: 0.5;">C:\Program Files\Google\Chrome\Application\chrome.exe</td>
+                    <td style="text-align: center;"><span class="mock-badge ok">Trusted</span></td>
+                  </tr>
+
+                  <!-- Row 4: Suspicious process -->
+                  <tr class="parent-row" data-name="unknown_temp.exe" onclick="selectMockRow(this)"
+                    id="mock-suspicious-row">
+                    <td class="num">12948</td>
+                    <td>
+                      <span class="mock-chevron" style="opacity: 0;">▶</span>
+                      <span style="font-weight: 600; color: var(--warn)">unknown_temp.exe</span>
+                    </td>
+                    <td class="num" style="text-align: right; font-weight: 600;">0.1%</td>
+                    <td class="num" style="text-align: right;">1.2 MB</td>
+                    <td
+                      style="opacity: 0.7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--warn)">
+                      C:\Users\Developer\AppData\Local\Temp\unknown_temp.exe</td>
+                    <td style="text-align: center;"><span class="mock-badge warn">Suspect</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- PANEL 3: NETWORK -->
+          <div class="mock-pane" id="pane-network">
+            <div class="mock-page-head">
+              <div>
+                <span class="crumb">Passive Sockets Sniffer & DNS Interceptor</span>
+                <h2>Network</h2>
+              </div>
+              <span class="mock-badge ok"><span
+                  style="width: 5px; height: 5px; background: var(--ok); border-radius:50%; display:inline-block; margin-right:4px;"></span>Passive
+                Listening</span>
+            </div>
+
+            <div class="mock-table-wrap">
+              <table class="mock-table">
+                <thead>
+                  <tr>
+                    <th style="width: 60px;">PID</th>
+                    <th style="width: 110px;">Process</th>
+                    <th style="width: 60px;">Proto</th>
+                    <th style="width: 160px;">Local Address</th>
+                    <th>Remote Address & Domain Target</th>
+                    <th style="width: 120px;">State</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="num">3488</td>
+                    <td style="font-weight: 600;">Code.exe</td>
+                    <td style="color: var(--ok); font-weight: 500;">TCP</td>
+                    <td class="num">192.168.1.15:53434</td>
+                    <td>
+                      <div style="display: flex; flex-direction: column;">
+                        <span style="color: var(--brand); font-weight: 500;">api.github.com</span>
+                        <span style="color: var(--fg-faint); font-size: 10.5px;">140.82.113.4:443</span>
+                      </div>
+                    </td>
+                    <td><span class="mock-badge ok">Established</span></td>
+                  </tr>
+                  <tr>
+                    <td class="num">8112</td>
+                    <td style="font-weight: 600;">chrome.exe</td>
+                    <td style="color: var(--ok); font-weight: 500;">TCP</td>
+                    <td class="num">192.168.1.15:53436</td>
+                    <td>
+                      <div style="display: flex; flex-direction: column;">
+                        <span style="color: var(--brand); font-weight: 500;">google.com</span>
+                        <span style="color: var(--fg-faint); font-size: 10.5px;">172.217.16.142:443</span>
+                      </div>
+                    </td>
+                    <td><span class="mock-badge ok">Established</span></td>
+                  </tr>
+                  <tr>
+                    <td class="num">1024</td>
+                    <td style="font-weight: 600;">System</td>
+                    <td style="color: var(--accent); font-weight: 500;">UDP</td>
+                    <td class="num">0.0.0.0:53</td>
+                    <td style="color: var(--fg-faint);">*:*</td>
+                    <td><span class="mock-badge info">Listening</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- PANEL 4: STORAGE -->
+          <div class="mock-pane" id="pane-storage">
+            <div class="mock-page-head">
+              <div>
+                <span class="crumb">Maintenance Utilities</span>
+                <h2>Storage</h2>
+              </div>
+              <div class="mock-tabs">
+                <button class="mock-tab active" onclick="switchStorageTab('quick', this)">Quick Cleaner</button>
+                <button class="mock-tab" onclick="switchStorageTab('dev', this)">Developer Cleaner</button>
+              </div>
+            </div>
+
+            <!-- Storage Sub-tab: Quick Cleaner -->
+            <div id="storage-tab-quick" style="display: flex; flex-direction: column; gap: 1.25rem;">
+              <div class="mock-card glow-top"
+                style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  <span class="mock-card-title">Cleanable Junk Space</span>
+                  <div class="mock-metric" id="quick-junk-space">1.42<span class="unit">GB</span></div>
+                </div>
+                <button class="mock-btn" style="background: var(--brand); color:#000; font-weight:600; border:0;"
+                  onclick="cleanStorageJunk('quick')">Clean All Junk</button>
+              </div>
+
+              <div class="mock-table-wrap">
+                <table class="mock-table">
+                  <thead>
+                    <tr>
+                      <th>Junk Type</th>
+                      <th>Description</th>
+                      <th style="width: 100px; text-align: right;">Size</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="font-weight:600;">System Log Cache</td>
+                      <td style="color: var(--fg-mute);">Windows event diagnostics logs and reports</td>
+                      <td class="num" style="text-align: right;">240 MB</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:600;">Temporary Files</td>
+                      <td style="color: var(--fg-mute);">Local AppData Temp workspace directories</td>
+                      <td class="num" style="text-align: right;">840 MB</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:600;">Browser Caches</td>
+                      <td style="color: var(--fg-mute);">Chrome & Edge accumulated web data cache</td>
+                      <td class="num" style="text-align: right;">380 MB</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Storage Sub-tab: Developer Cleaner -->
+            <div id="storage-tab-dev" style="display: none; flex-direction: column; gap: 1.25rem;">
+              <div class="mock-card" style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  <span class="mock-card-title">Reclaimable Code Build waste</span>
+                  <div class="mock-metric" id="dev-junk-space">18.4<span class="unit">GB</span></div>
+                </div>
+                <button class="mock-btn" style="background: var(--accent); color:#fff; font-weight:600; border:0;"
+                  onclick="cleanStorageJunk('dev')">Purge Build Targets</button>
+              </div>
+
+              <div class="mock-table-wrap">
+                <table class="mock-table">
+                  <thead>
+                    <tr>
+                      <th>Pattern Path</th>
+                      <th>Workspace Source</th>
+                      <th>Estimated Size</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="font-weight:600; font-family: monospace;">d:\code\my-app\node_modules</td>
+                      <td style="color: var(--fg-mute);">Node.js packages caches</td>
+                      <td class="num" style="text-align: right; color: var(--warn);">14.2 GB</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:600; font-family: monospace;">d:\noyare\src-tauri\target</td>
+                      <td style="color: var(--fg-mute);">Rust Cargo compiled artifacts</td>
+                      <td class="num" style="text-align: right; color: var(--warn);">3.8 GB</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:600; font-family: monospace;">d:\ai\scripts\.venv</td>
+                      <td style="color: var(--fg-mute);">Python environment virtual package site</td>
+                      <td class="num" style="text-align: right; color: var(--warn);">480 MB</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL 5: PROXY INTERCEPT -->
+          <div class="mock-pane" id="pane-proxy">
+            <div class="mock-page-head">
+              <div>
+                <span class="crumb">MITM Proxy Debugging Engine</span>
+                <h2>Proxy Intercept</h2>
+              </div>
+              <div class="mock-req-intercept">
+                <span class="mock-req-intercept-dot"></span>
+                <span>Active Interceptor Hook Enabled</span>
+              </div>
+            </div>
+
+            <div class="mock-split">
+              <!-- HTTP Request List -->
+              <div class="mock-table-wrap" style="height: 100%; overflow-y: auto;">
+                <table class="mock-table" style="font-size: 11.5px;">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px;">Method</th>
+                      <th>Path target</th>
+                      <th style="width: 50px; text-align: right;">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="selected" onclick="viewMockRequest('req-1')">
+                      <td style="font-weight: 700; color: var(--brand);">POST</td>
+                      <td class="mono"
+                        style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">
+                        /api/v1/auth/login</td>
+                      <td class="num" style="text-align: right; color: var(--ok); font-weight: 600;">200</td>
+                    </tr>
+                    <tr onclick="viewMockRequest('req-2')">
+                      <td style="font-weight: 700; color: var(--ok);">GET</td>
+                      <td class="mono"
+                        style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">
+                        /api/v1/dashboard/metrics</td>
+                      <td class="num" style="text-align: right; color: var(--ok); font-weight: 600;">200</td>
+                    </tr>
+                    <tr onclick="viewMockRequest('req-3')">
+                      <td style="font-weight: 700; color: var(--brand);">POST</td>
+                      <td class="mono"
+                        style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">
+                        /api/v2/telemetry/stats</td>
+                      <td class="num" style="text-align: right; color: var(--bad); font-weight: 600;">500</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Intercept Inspector -->
+              <div class="mock-detail-pane" id="proxy-details-wrap">
+                <!-- Request details rendered here -->
+                <div id="proxy-detail-req-1" class="proxy-detail-content">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight:600; font-size:13px; color: var(--brand);">POST /api/v1/auth/login</span>
+                    <span class="mock-badge ok">Intercepted</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px; font-size: 11px;">
+                    <div>
+                      <span style="color: var(--fg-ghost); font-weight:600;">Host:</span>
+                      <span class="mono">api.internal.platform</span>
+                    </div>
+                    <div>
+                      <span style="color: var(--fg-ghost); font-weight:600;">Content-Type:</span>
+                      <span class="mono">application/json</span>
+                    </div>
+                    <div style="border-top:1px solid var(--line-soft); padding-top:8px;">
+                      <span style="color: var(--fg-ghost); font-weight:600; display:block; margin-bottom:4px;">Request
+                        Payload JSON:</span>
+                      <pre class="mono"
+                        style="background: rgba(0,0,0,0.2); padding: 8px; border-radius:6px; overflow-x:auto; color: var(--brand);">{\n  "client_id": "noyare_desktop",\n  "auth_token": "ny_4812aef"\n}</pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="proxy-detail-req-2" class="proxy-detail-content" style="display: none;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight:600; font-size:13px; color: var(--ok);">GET
+                      /api/v1/dashboard/metrics</span>
+                    <span class="mock-badge info">Captured</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px; font-size: 11px;">
+                    <div>
+                      <span style="color: var(--fg-ghost); font-weight:600;">Host:</span>
+                      <span class="mono">localhost:3000</span>
+                    </div>
+                    <div style="border-top:1px solid var(--line-soft); padding-top:8px;">
+                      <span style="color: var(--fg-ghost); font-weight:600; display:block; margin-bottom:4px;">Response
+                        JSON:</span>
+                      <pre class="mono"
+                        style="background: rgba(0,0,0,0.2); padding: 8px; border-radius:6px; overflow-x:auto; color: var(--ok);">{\n  "cpu_average_load": 12.8,\n  "memory_used_mb": 9481.5\n}</pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="proxy-detail-req-3" class="proxy-detail-content" style="display: none;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight:600; font-size:13px; color: var(--bad);">POST
+                      /api/v2/telemetry/stats</span>
+                    <span class="mock-badge bad">Exception</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px; font-size: 11px;">
+                    <div>
+                      <span style="color: var(--fg-ghost); font-weight:600;">Host:</span>
+                      <span class="mono">telemetry.metrics.cloud</span>
+                    </div>
+                    <div style="border-top:1px solid var(--line-soft); padding-top:8px;">
+                      <span style="color: var(--fg-ghost); font-weight:600; display:block; margin-bottom:4px;">Server
+                        Exception trace:</span>
+                      <pre class="mono"
+                        style="background: rgba(0,0,0,0.2); padding: 8px; border-radius:6px; overflow-x:auto; color: var(--bad);">500 Internal Server Error\nException: Database pool exhausted.</pre>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <!-- Advanced Features Section -->
+  <section class="features-section" id="features">
+    <div class="section-title">
+      <h2>Engineered for High Performance</h2>
+      <p>Noyare redefines system monitoring by introducing modern, security-centric tools and developer utilities built
+        into a zero-latency native core.</p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Feature 1 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">📦</div>
+        <div class="feature-info">
+          <h3>Consolidated Process Grouping</h3>
+          <p>Collapses multi-thread helper process trees (like VS Code, Chrome, or Rust build binaries) into an
+            aggregated single row. Expand at will to see specific child process IDs and micro stats.</p>
+        </div>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">🛡️</div>
+        <div class="feature-info">
+          <h3>Automated Security Scoring</h3>
+          <p>Instantly verifies digital signature authenticity of system binaries and queries local safety heuristics.
+            Color-coded badges tag processes as Trusted, Suspect, or Threat processes.</p>
+        </div>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">⚙️</div>
+        <div class="feature-info">
+          <h3>Local Proxy & MITM interceptor</h3>
+          <p>An integrated HTTP/HTTPS proxy to capture and review local application API payloads, network requests,
+            headers, and responses in real-time without bulky external software.</p>
+        </div>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">💾</div>
+        <div class="feature-info">
+          <h3>Developer Maintenance Cleaner</h3>
+          <p>Scan workspaces to instantly identify gigabytes of forgotten compiled build directories like
+            <code>node_modules</code>, <code>venv</code>, and Cargo <code>target</code> folders and flush them in one
+            sweep.
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature 5 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">⇄</div>
+        <div class="feature-info">
+          <h3>Passive Socket & DNS Sniffer</h3>
+          <p>Monitors outbound socket requests and traces local system DNS queries on the fly. Maps external IP targets
+            directly to real-time resolved host domains via a native sniffer.</p>
+        </div>
+      </div>
+
+      <!-- Feature 6 -->
+      <div class="feature-card">
+        <div class="feature-icon-wrapper">⚡</div>
+        <div class="feature-info">
+          <h3>Concurrent Group Kill</h3>
+          <p>Terminate nested application clusters concurrently in a single operation. Protects the operating system by
+            confirming group mass-kills safely with prompt logs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Architecture / Documentation Code Block Section -->
+  <section class="arch-section" id="architecture">
+    <div class="arch-container">
+      <div class="arch-text">
+        <h2>Technical Architecture</h2>
+        <p>Built with modern stack components, Noyare bridges the low-level efficiency of Rust native compilation with
+          React's rich state-reactive UI rendering.</p>
+
+        <div class="arch-tab-list">
+          <button class="arch-tab-btn active" onclick="switchArchTab('core', this)">
+            <span class="arch-tab-btn-title">Rust Backend Controller</span>
+            <span class="arch-tab-btn-desc">High performance polling & system operations</span>
+          </button>
+          <button class="arch-tab-btn" onclick="switchArchTab('tauri', this)">
+            <span class="arch-tab-btn-title">Tauri API Bridge</span>
+            <span class="arch-tab-btn-desc">Ultra lightweight system hooks calling</span>
+          </button>
+          <button class="arch-tab-btn" onclick="switchArchTab('frontend', this)">
+            <span class="arch-tab-btn-title">React UI Rendering</span>
+            <span class="arch-tab-btn-desc">Sleek, fluid panels and components layouts</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Code blocks displays -->
+      <div>
+        <!-- Rust Code Block -->
+        <pre class="arch-code-block active" id="code-core"><span class="arch-code-header">Rust System Call</span><code style="color: #6ee7b7;">#[tauri::command]
+pub async fn get_processes() -> Result&lt;Vec&lt;ProcessInfo&gt;, String&gt; {
+    let mut system = System::new_all();
+    system.refresh_all();
+    
+    let processes = system.processes()
+        .values()
+        .map(|val| ProcessInfo {
+            pid: val.pid().as_u32(),
+            name: val.name().to_string(),
+            cpu: val.cpu_usage(),
+            memory: val.memory(),
+            path: val.exe().map(|p| p.to_string_lossy().to_string()),
+        })
+        .collect();
+        
+    Ok(processes)
+}</code></pre>
+
+        <!-- Tauri Code Block -->
+        <pre class="arch-code-block" id="code-tauri"><span class="arch-code-header">Tauri Config JSON</span><code style="color: #6ee7b7;">{
+  "tauri": {
+    "bundle": {
+      "active": true,
+      "targets": ["msi", "nsis"]
+    },
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'"
+    },
+    "windows": [
+      {
+        "title": "Noyare Monitor",
+        "width": 1024,
+        "height": 720,
+        "resizable": true,
+        "decorations": false
+      }
+    ]
+  }
+}</code></pre>
+
+        <!-- Frontend Code Block -->
+        <pre class="arch-code-block" id="code-frontend"><span class="arch-code-header">React Hook</span><code style="color: #6ee7b7;">export function useProcessMonitor() {
+  const [processes, setProcesses] = useState&lt;Process[]&gt;([]);
+  
+  useEffect(() => {
+    const fetchInterval = setInterval(async () => {
+      const data = await invoke&lt;Process[]&gt;("get_processes");
+      setProcesses(clusterProcesses(data));
+    }, 1000);
+    
+    return () => clearInterval(fetchInterval);
+  }, []);
+  
+  return { processes };
+}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span>
+          <span
+            style="width: 8px; height: 8px; background: var(--brand); border-radius: 50%; display: inline-block; box-shadow: 0 0 8px var(--brand);"></span>
+          Noyare
+        </span>
+        <p>© 2026 Noyare Project.</p>
+      </div>
+      <!-- <div class="footer-links">
+        <a href="https://github.com/Talhary/noyare" target="_blank" rel="noopener noreferrer">Source Code</a>
+        <a href="https://github.com/Talhary/noyare/issues" target="_blank" rel="noopener noreferrer">Bug Reports</a>
+      </div> -->
+    </div>
+  </footer>
+
+  <!-- Mockup Logic Script -->
+  <script>
+    // 1. Pane Switching Logic
+    function switchMockPane(paneId, btnElement) {
+      // Toggle side bar active
+      document.querySelectorAll('.mock-sb-item').forEach(el => el.classList.remove('active'));
+      btnElement.classList.add('active');
+
+      // Toggle display of panes
+      document.querySelectorAll('.mock-pane').forEach(el => el.classList.remove('active'));
+      const targetPane = document.getElementById('pane-' + paneId);
+      if (targetPane) targetPane.classList.add('active');
+    }
+
+    // 2. Dashboard Logical Cores Simulation
+    const coresContainer = document.getElementById('dashboard-cores');
+    const totalCores = 16;
+    for (let i = 0; i < totalCores; i++) {
+      const core = document.createElement('div');
+      core.className = 'mock-core';
+      core.innerHTML = `
+        <span class="mock-core-label">P${i}</span>
+        <span class="mock-core-pct" id="core-pct-${i}">2%</span>
+        <div class="mock-core-bar" id="core-bar-${i}" style="width: 2%;"></div>
+      `;
+      coresContainer.appendChild(core);
+    }
+
+    // Real-time animation of logical cores
+    setInterval(() => {
+      let totalLoad = 0;
+      for (let i = 0; i < totalCores; i++) {
+        const load = Math.floor(Math.random() * 28) + 1; // 1% to 29% load
+        totalLoad += load;
+
+        const pctText = document.getElementById('core-pct-' + i);
+        const bar = document.getElementById('core-bar-' + i);
+        if (pctText && bar) {
+          pctText.innerText = load + '%';
+          bar.style.width = load + '%';
+
+          // Color coding cores depending on simulated load
+          if (load > 20) {
+            bar.style.backgroundColor = 'var(--accent)';
+          } else if (load > 12) {
+            bar.style.backgroundColor = 'var(--warn)';
+          } else {
+            bar.style.backgroundColor = 'var(--brand)';
+          }
+        }
+      }
+      // Update memory & net download speed subtly
+      const avg = Math.round(totalLoad / totalCores);
+      const rx = (Math.random() * 150 + 50).toFixed(1);
+      const tx = (Math.random() * 20 + 5).toFixed(1);
+
+      const rxText = document.getElementById('mock-net-rx');
+      const txText = document.getElementById('mock-net-tx');
+      if (rxText) rxText.innerText = rx + ' KB/s';
+      if (txText) txText.innerText = tx + ' KB/s';
+    }, 1200);
+
+    // 3. Process Panel Logic: Toggle group collapsible row
+    function toggleMockGroup(groupKey, rowElement) {
+      const isCollapsed = rowElement.querySelector('.mock-chevron').innerText === '▶';
+      const chevron = rowElement.querySelector('.mock-chevron');
+      const childRows = document.querySelectorAll('.child-row-' + groupKey);
+
+      if (isCollapsed) {
+        chevron.innerText = '▼';
+        chevron.classList.add('expanded');
+        childRows.forEach(el => el.style.display = 'table-row');
+      } else {
+        chevron.innerText = '▶';
+        chevron.classList.remove('expanded');
+        childRows.forEach(el => el.style.display = 'none');
+      }
+    }
+
+    // Row selection highlights
+    let selectedRow = null;
+    function selectMockRow(rowElement) {
+      if (selectedRow) selectedRow.classList.remove('selected');
+      selectedRow = rowElement;
+      selectedRow.classList.add('selected');
+    }
+
+    // Real-time Process filter matching path & name
+    function filterMockProcesses() {
+      const input = document.getElementById('proc-filter').value.toLowerCase();
+      const rows = document.querySelectorAll('#mock-proc-table tbody tr.parent-row');
+
+      rows.forEach(row => {
+        const name = row.getAttribute('data-name').toLowerCase();
+        const path = row.querySelector('td:nth-child(5)').innerText.toLowerCase();
+
+        if (name.includes(input) || path.includes(input)) {
+          row.style.display = 'table-row';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // Simulated Action: Kill selected process
+    function simulateKillProcess() {
+      if (selectedRow) {
+        selectedRow.style.transform = 'scale(0.97)';
+        selectedRow.style.opacity = '0';
+        setTimeout(() => {
+          selectedRow.remove();
+          selectedRow = null;
+          // update processes badge counter
+          const procBadge = document.getElementById('mock-badge-proc');
+          if (procBadge) {
+            let count = parseInt(procBadge.innerText) - 1;
+            procBadge.innerText = count > 0 ? count : '';
+          }
+        }, 300);
+      } else {
+        alert('Please click a process row in the table first to select it.');
+      }
+    }
+
+    // 4. Storage Maintenance tabs switching
+    function switchStorageTab(tabId, btnElement) {
+      // Toggle storage buttons active
+      document.querySelectorAll('.mock-tab').forEach(el => el.classList.remove('active'));
+      btnElement.classList.add('active');
+
+      // Toggle display of storage sub-panes
+      if (tabId === 'quick') {
+        document.getElementById('storage-tab-quick').style.display = 'flex';
+        document.getElementById('storage-tab-dev').style.display = 'none';
+      } else {
+        document.getElementById('storage-tab-quick').style.display = 'none';
+        document.getElementById('storage-tab-dev').style.display = 'flex';
+      }
+    }
+
+    // Sweep Cleaner Action Animation
+    function cleanStorageJunk(type) {
+      const loader = document.getElementById('sweep-loader');
+      const text = document.getElementById('sweep-path-text');
+
+      if (type === 'quick') {
+        text.innerText = 'Sweeping Temporary Files...';
+      } else {
+        text.innerText = 'Sweeping node_modules directories...';
+      }
+
+      loader.classList.add('active');
+
+      setTimeout(() => {
+        loader.classList.remove('active');
+        if (type === 'quick') {
+          document.getElementById('quick-junk-space').innerHTML = '0<span class="unit">B</span>';
+          alert('System temporary logs flushed! Saved 1.42 GB.');
+        } else {
+          document.getElementById('dev-junk-space').innerHTML = '0<span class="unit">B</span>';
+          alert('All developer target and node_modules folders wiped! Saved 18.4 GB.');
+        }
+      }, 1800);
+    }
+
+    // 5. Proxy inspector rows view toggling
+    function viewMockRequest(id) {
+      // Highlight row selection
+      const tbody = document.querySelector('#pane-proxy tbody');
+      const rows = tbody.querySelectorAll('tr');
+      rows.forEach(r => r.classList.remove('selected'));
+
+      // Toggle request detail layout
+      document.querySelectorAll('.proxy-detail-content').forEach(el => el.style.display = 'none');
+      const targetDetail = document.getElementById('proxy-detail-' + id);
+      if (targetDetail) targetDetail.style.display = 'block';
+    }
+
+    // Find clicked row to add active
+    document.querySelectorAll('#pane-proxy tbody tr').forEach(row => {
+      row.addEventListener('click', function () {
+        this.classList.add('selected');
+      });
+    });
+
+    // 6. Architecture Tabs logic
+    function switchArchTab(tabId, btnElement) {
+      document.querySelectorAll('.arch-tab-btn').forEach(el => el.classList.remove('active'));
+      btnElement.classList.add('active');
+
+      document.querySelectorAll('.arch-code-block').forEach(el => el.classList.remove('active'));
+      document.getElementById('code-' + tabId).classList.add('active');
+    }
+  </script>
+</body>
+
+</html>
