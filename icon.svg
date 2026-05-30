@@ -1,0 +1,17 @@
+<svg viewBox="41 20 67 60" xmlns="http://www.w3.org/2000/svg" style="max-height: 500px" width="67" height="60">
+  <defs>
+    <filter height="200%" width="200%" y="-50%" x="-50%" id="outer-glow">
+      <feGaussianBlur stdDeviation="8" in="SourceGraphic"/>
+    </filter>
+    
+    <filter height="140%" width="140%" y="-20%" x="-20%" id="inner-blur">
+      <feGaussianBlur stdDeviation="1.5" in="SourceGraphic"/>
+    </filter>
+  </defs>
+  
+  <rect fill="#0c2226" height="100%" width="100%"/>
+  
+  <circle opacity="0.7" filter="url(#outer-glow)" fill="#1b8c89" r="18" cy="50" cx="75"/>
+  
+  <circle filter="url(#inner-blur)" fill="#30e3dc" r="12" cy="50" cx="75"/>
+</svg>
