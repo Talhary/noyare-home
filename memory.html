@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Noyare Memory — Intelligent Standby List Cleaner (ISLC) & RAM Optimizer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Purge bloated system standby memory lists and trim process working sets automatically. Prevent micro-stuttering and free active RAM safely using Noyare.">
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="home.css">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+  <style>
+    /* Custom page-specific Memory layout styles */
+    .memory-gauge-container {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: 36px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 1024px) {
+      .memory-gauge-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    .ram-card {
+      background: var(--bg-elev);
+      border: 1px solid var(--line-soft);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);
+    }
+    .ram-card h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--teal);
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    .ram-card p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--fg-mute);
+      margin-bottom: 24px;
+    }
+    .ram-visual-block {
+      background: oklch(0.12 0.01 240);
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .ram-bar-segmentation {
+      height: 24px;
+      border-radius: 6px;
+      background: var(--bg-inset);
+      display: flex;
+      overflow: hidden;
+      margin-bottom: 16px;
+      border: 1px solid var(--line-soft);
+    }
+    .ram-segment {
+      height: 100%;
+      transition: width 0.3s var(--ease);
+    }
+    .segment-details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .segment-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--fg-mute);
+    }
+    .segment-color {
+      width: 10px; height: 10px;
+      border-radius: 2px;
+    }
+    .section-anchor-box {
+      background: var(--bg-elev);
+      border: 1px solid var(--line-soft);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);
+      margin-bottom: 80px;
+    }
+    .section-anchor-box h3 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--teal);
+      margin-top: 0;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- Aurora background elements -->
+    <div class="bg-fx" aria-hidden="true">
+      <div class="bg-grid"></div>
+      <div class="bg-glow t"></div>
+      <div class="bg-glow v"></div>
+    </div>
+
+    <!-- Floating Glass Nav -->
+    <nav class="nav">
+      <div class="container nav-inner">
+        <a class="brand" href="index.html">
+          <img src="./logo.png" alt="Noyare Logo" style="width: 24px; height: 24px; border-radius: 6px;">
+          NOYARE
+        </a>
+        <div class="nav-links">
+          <a class="nav-link" href="index.html">Home</a>
+          <div class="nav-dropdown">
+            <a class="nav-link" style="cursor: pointer;">Features ▾</a>
+            <div class="dropdown-menu">
+              <a href="dashboard.html" class="dropdown-item">📊 Dashboard</a>
+              <a href="processes.html" class="dropdown-item">⚙️ Processes</a>
+              <a href="ports.html" class="dropdown-item">🔌 Sockets & Ports</a>
+              <a href="network.html" class="dropdown-item">📡 DNS Sniffer</a>
+              <a href="storage.html" class="dropdown-item">💾 Disk Storage</a>
+              <a href="proxy.html" class="dropdown-item">🛡️ HTTPS Proxy</a>
+              <a href="memory.html" class="dropdown-item">🧠 RAM Optimizer</a>
+              <a href="startup.html" class="dropdown-item">🚀 Startup Apps</a>
+              <a href="insomnia.html" class="dropdown-item">☕ Keep Awake</a>
+              <a href="battery.html" class="dropdown-item">🔋 Battery Telemetry</a>
+              <a href="tweaks.html" class="dropdown-item">🔧 OS Tweaks</a>
+              <a href="tunnels.html" class="dropdown-item">🌐 Cloudflare Tunnel</a>
+              <a href="quicklook.html" class="dropdown-item">🔍 Spacebar Quick Look</a>
+            </div>
+          </div>
+          <a class="nav-link" href="index.html#specs">Specs</a>
+        </div>
+        <a class="nav-cta" href="https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare" target="_blank" rel="noopener noreferrer">
+          Get Noyare
+        </a>
+      </div>
+    </nav>
+
+    <!-- Subpage Hero -->
+    <header class="container subpage-hero">
+      <span class="hero-eyebrow"><span class="live-dot"></span>FEATURE 07 · MEMORY CACHE CLEANER</span>
+      <h1>Intelligent Standby <span>List Cleaner.</span></h1>
+      <p class="lede">Eradicate micro-stuttering in high-FPS gaming and free up active hardware buffers by purging operating system memory standby lists automatically.</p>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container">
+      <div class="memory-gauge-container">
+        <!-- RAM Card layout -->
+        <div class="ram-card">
+          <h2>The Standby Memory Bottleneck</h2>
+          <p>
+            Operating systems cache files and programs, creating a "Standby List". While theoretically beneficial, this standby list often fails to release memory quickly enough when demanding programs or high-framerate competitive gaming request memory.
+          </p>
+
+          <!-- RAM Segment Bar Mockup -->
+          <div class="ram-visual-block">
+            <div style="font-family: var(--mono); font-size: 10px; color: var(--fg-faint); margin-bottom: 8px;">PHYSICAL RAM ALLOCATION (16 GB)</div>
+            <div class="ram-bar-segmentation">
+              <div class="ram-segment" style="width: 40%; background: var(--teal);"></div>
+              <div class="ram-segment" style="width: 35%; background: var(--violet);"></div>
+              <div class="ram-segment" style="width: 15%; background: var(--amber);"></div>
+              <div class="ram-segment" style="width: 10%; background: var(--fg-ghost);"></div>
+            </div>
+            <div class="segment-details">
+              <div class="segment-item"><span class="segment-color" style="background: var(--teal);"></span>Active Apps (6.4 GB)</div>
+              <div class="segment-item"><span class="segment-color" style="background: var(--violet);"></span>Standby Cache (5.6 GB)</div>
+              <div class="segment-item"><span class="segment-color" style="background: var(--amber);"></span>System Reserve (2.4 GB)</div>
+              <div class="segment-item"><span class="segment-color" style="background: var(--fg-ghost);"></span>Free Standby (1.6 GB)</div>
+            </div>
+          </div>
+
+          <p style="font-size: 14.5px; color: var(--fg-mute); margin-top: 10px; line-height: 1.5;">
+            Trimming active working sets and caching tables instantly eliminates system page file swapping and micro-stutters during heavy resource loads.
+          </p>
+        </div>
+
+        <!-- Interactive Test UI Section -->
+        <section id="test-ui" class="stage-container" style="background: var(--bg-elev); border-radius: 20px; border: 1px solid var(--line-soft); padding: 24px; box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);">
+          <div style="font-family: var(--mono); font-size: 10px; color: var(--teal); background: var(--teal-soft); padding: 4px 8px; border-radius: 4px; margin-bottom: 12px; display: inline-block;">INTERACTIVE TEST CONSOLE</div>
+          <div id="feature-demo"></div>
+        </section>
+      </div>
+
+      <!-- How it Works Section -->
+      <section id="how-it-works" class="section-anchor-box">
+        <h3>🧠 How the RAM Optimizer Works Under the Hood</h3>
+        <p style="font-size: 14.5px; line-height: 1.6; color: var(--fg-mute);">
+          Noyare uses low-level operating system APIs to purge standby caches and reclaim process working sets safely:
+        </p>
+        <ul style="color: var(--fg-mute); font-size: 14px; margin-top: 14px; padding-left: 20px;">
+          <li style="margin-bottom: 8px;"><b>Standby List Purge:</b> On Windows, the Rust backend invokes the native <code>NtSetSystemInformation</code> NTSTATUS call (specifically configuration class <code>80</code>) to immediately purge cache standby lists.</li>
+          <li style="margin-bottom: 8px;"><b>Process Working Set Trim:</b> Trims active memory footprints by walking process lists and invoking the standard <code>EmptyWorkingSet</code> API on background processes.</li>
+          <li style="margin-bottom: 8px;"><b>Ryzen and Intel Optimization:</b> Fully optimized to run safely without interrupting active fullscreen high-CPU rendering or gaming windows, ensuring zero drop in performance.</li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-inner">
+          <div>
+            <a class="brand" href="index.html"><img src="./logo.png" alt="Noyare Logo" style="width: 24px; height: 24px; border-radius: 6px;">NOYARE</a>
+            <p style="margin-top: 16px; color: var(--fg-mute); font-size: 13.5px; max-width: 36ch;">
+              A forensic system monitor. Built locally, runs locally, stays locally.
+            </p>
+          </div>
+          <div>
+            <h5>Product</h5>
+            <ul>
+              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="processes.html">Processes</a></li>
+              <li><a href="ports.html">Ports</a></li>
+              <li><a href="network.html">Network</a></li>
+              <li><a href="storage.html">Storage</a></li>
+              <li><a href="proxy.html">Proxy</a></li>
+              <li><a href="memory.html">Memory</a></li>
+              <li><a href="startup.html">Startup</a></li>
+              <li><a href="insomnia.html">Keep Awake</a></li>
+              <li><a href="battery.html">Battery</a></li>
+              <li><a href="tweaks.html">Tweaks</a></li>
+              <li><a href="tunnels.html">Tunnels</a></li>
+              <li><a href="quicklook.html">Quick Look</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Resources</h5>
+            <ul>
+              <li>Documentation</li>
+              <li>Changelog</li>
+              <li>Roadmap</li>
+              <li><a href="https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare" target="_blank" rel="noopener noreferrer">Microsoft Store</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Project</h5>
+            <ul>
+              <li>About</li>
+              <li>License</li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li>Contact</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-meta">
+          <span>NOYARE © 2026 · APACHE-2.0</span>
+          <span>BUILT IN RUST · DESIGNED IN THE OPEN</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Loading React Widgets -->
+  <script src="home-bits.js"></script>
+  <script src="home-features.js"></script>
+  <script>
+    ReactDOM.createRoot(document.getElementById("feature-demo")).render(
+      React.createElement(window.StageMemory)
+    );
+  </script>
+</body>
+</html>

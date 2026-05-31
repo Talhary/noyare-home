@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Noyare Ports — Open Sockets & Network Exposure Security Auditor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Audit every open port and listening socket on your computer. Trace connection owning PIDs, and block network exposure with local-first security classification.">
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="home.css">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+  <style>
+    /* Custom page-specific Sockets and Ports layout */
+    .ports-blueprint-container {
+      display: grid;
+      grid-template-columns: 8fr 6fr;
+      gap: 36px;
+      margin-top: 40px;
+      margin-bottom: 80px;
+    }
+    @media (max-width: 1024px) {
+      .ports-blueprint-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    .security-matrix-card {
+      background: var(--bg-elev);
+      border: 1px solid var(--line-soft);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);
+    }
+    .security-matrix-card h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--teal);
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    .security-matrix-card p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--fg-mute);
+      margin-bottom: 24px;
+    }
+    .vuln-ports-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 12px;
+      margin-top: 20px;
+    }
+    .vuln-ports-table th, .vuln-ports-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .vuln-ports-table th {
+      color: var(--fg-ghost);
+      font-weight: 500;
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+    }
+    .vuln-ports-table td b {
+      color: var(--fg);
+    }
+    .badge-exposed {
+      color: var(--amber);
+      background: oklch(0.84 0.14 80 / 0.12);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .badge-danger {
+      color: var(--red);
+      background: oklch(0.66 0.18 18 / 0.12);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .badge-safe {
+      color: var(--teal);
+      background: var(--teal-soft);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- Aurora background elements -->
+    <div class="bg-fx" aria-hidden="true">
+      <div class="bg-grid"></div>
+      <div class="bg-glow t"></div>
+      <div class="bg-glow v"></div>
+    </div>
+
+    <!-- Floating Glass Nav -->
+    <nav class="nav">
+      <div class="container nav-inner">
+        <a class="brand" href="index.html">
+          <img src="./logo.png" alt="Noyare Logo" style="width: 24px; height: 24px; border-radius: 6px;">
+          NOYARE
+        </a>
+        <div class="nav-links">
+          <a class="nav-link" href="index.html">Home</a>
+          <div class="nav-dropdown">
+            <a class="nav-link" style="cursor: pointer;">Features ▾</a>
+            <div class="dropdown-menu">
+              <a href="dashboard.html" class="dropdown-item">📊 Dashboard</a>
+              <a href="processes.html" class="dropdown-item">⚙️ Processes</a>
+              <a href="ports.html" class="dropdown-item">🔌 Sockets & Ports</a>
+              <a href="network.html" class="dropdown-item">📡 DNS Sniffer</a>
+              <a href="storage.html" class="dropdown-item">💾 Disk Storage</a>
+              <a href="proxy.html" class="dropdown-item">🛡️ HTTPS Proxy</a>
+              <a href="memory.html" class="dropdown-item">🧠 RAM Optimizer</a>
+              <a href="startup.html" class="dropdown-item">🚀 Startup Apps</a>
+              <a href="insomnia.html" class="dropdown-item">☕ Keep Awake</a>
+              <a href="battery.html" class="dropdown-item">🔋 Battery Telemetry</a>
+              <a href="tweaks.html" class="dropdown-item">🔧 OS Tweaks</a>
+              <a href="tunnels.html" class="dropdown-item">🌐 Cloudflare Tunnel</a>
+              <a href="quicklook.html" class="dropdown-item">🔍 Spacebar Quick Look</a>
+            </div>
+          </div>
+          <a class="nav-link" href="index.html#specs">Specs</a>
+        </div>
+        <a class="nav-cta" href="https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare" target="_blank" rel="noopener noreferrer">
+          Get Noyare
+        </a>
+      </div>
+    </nav>
+
+    <!-- Subpage Hero -->
+    <header class="container subpage-hero">
+      <span class="hero-eyebrow"><span class="live-dot"></span>FEATURE 03 · SOCKETS & PORTS</span>
+      <h1>Expose Nothing. <span>Lock Down Sockets.</span></h1>
+      <p class="lede">Discover every open network gateway, identify binding PIDs, and auditor socket exposure risk levels in a modern, real-time observabilty grid.</p>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container">
+      <div class="ports-blueprint-container">
+        <!-- Blueprint Risk Card -->
+        <div class="security-matrix-card">
+          <h2>Port Risk-Exposure Classification</h2>
+          <p>
+            Rather than forcing developers to manually research standard port registrations, Noyare's local parser verifies socket risk characteristics and tags each grid cell immediately.
+          </p>
+
+          <table class="vuln-ports-table">
+            <thead>
+              <tr>
+                <th>PORT</th>
+                <th>SERVICE</th>
+                <th>EXPOSURE BIND</th>
+                <th>RISK STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>:22</b></td>
+                <td>SSH / Secure Shell</td>
+                <td>0.0.0.0 (Public)</td>
+                <td><span class="badge-exposed">EXPOSED</span></td>
+              </tr>
+              <tr>
+                <td><b>:80</b> / <b>:443</b></td>
+                <td>Web traffic server</td>
+                <td>0.0.0.0 (Public)</td>
+                <td><span class="badge-exposed">EXPOSED</span></td>
+              </tr>
+              <tr>
+                <td><b>:445</b></td>
+                <td>Microsoft SMB directory</td>
+                <td>0.0.0.0 (Public)</td>
+                <td><span class="badge-danger">DANGER</span></td>
+              </tr>
+              <tr>
+                <td><b>:5432</b></td>
+                <td>PostgreSQL database</td>
+                <td>127.0.0.1 (Loopback)</td>
+                <td><span class="badge-safe">SAFE</span></td>
+              </tr>
+              <tr>
+                <td><b>:8080</b></td>
+                <td>Local Node dev server</td>
+                <td>0.0.0.0 (Public)</td>
+                <td><span class="badge-exposed">EXPOSED</span></td>
+              </tr>
+              <tr>
+                <td><b>:9090</b></td>
+                <td>Noyare Proxy listener</td>
+                <td>127.0.0.1 (Loopback)</td>
+                <td><span class="badge-safe">SAFE</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p style="font-size: 13.5px; color: var(--fg-mute); margin-top: 24px; line-height: 1.5;">
+            Tooling conflicts (e.g. "Port 8080 is already in use") are trivial to solve inside Noyare. The interface links network data directly to the active process tree, showing you exactly who owns the port in one tap.
+          </p>
+        </div>
+
+        <!-- Mini Interactive Demo -->
+        <aside class="stage-container" style="background: var(--bg-elev); border-radius: 20px; border: 1px solid var(--line-soft); padding: 24px; box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);">
+          <div id="feature-demo"></div>
+        </aside>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-inner">
+          <div>
+            <a class="brand" href="index.html"><img src="./logo.png" alt="Noyare Logo" style="width: 24px; height: 24px; border-radius: 6px;">NOYARE</a>
+            <p style="margin-top: 16px; color: var(--fg-mute); font-size: 13.5px; max-width: 36ch;">
+              A forensic system monitor. Built locally, runs locally, stays locally.
+            </p>
+          </div>
+          <div>
+            <h5>Product</h5>
+            <ul>
+              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="processes.html">Processes</a></li>
+              <li><a href="ports.html">Ports</a></li>
+              <li><a href="network.html">Network</a></li>
+              <li><a href="storage.html">Storage</a></li>
+              <li><a href="proxy.html">Proxy</a></li>
+              <li><a href="memory.html">Memory</a></li>
+              <li><a href="startup.html">Startup</a></li>
+              <li><a href="insomnia.html">Keep Awake</a></li>
+              <li><a href="battery.html">Battery</a></li>
+              <li><a href="tweaks.html">Tweaks</a></li>
+              <li><a href="tunnels.html">Tunnels</a></li>
+              <li><a href="quicklook.html">Quick Look</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Resources</h5>
+            <ul>
+              <li>Documentation</li>
+              <li>Changelog</li>
+              <li>Roadmap</li>
+              <li><a href="https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare" target="_blank" rel="noopener noreferrer">Microsoft Store</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Project</h5>
+            <ul>
+              <li>About</li>
+              <li>License</li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li>Contact</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-meta">
+          <span>NOYARE © 2026 · APACHE-2.0</span>
+          <span>BUILT IN RUST · DESIGNED IN THE OPEN</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Loading React Widgets -->
+  <script src="home-bits.js"></script>
+  <script src="home-features.js"></script>
+  <script>
+    ReactDOM.createRoot(document.getElementById("feature-demo")).render(
+      React.createElement(window.StagePorts)
+    );
+  </script>
+</body>
+</html>

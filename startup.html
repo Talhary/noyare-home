@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Noyare Startup — Custom Boot Delays & Startup Registry Auditor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Accelerate your computer boot time with Noyare. Audit registered startup programs, analyze system impact, and configure custom launch delays safely.">
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="home.css">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+  <style>
+    /* Custom page-specific Startup Layout styles */
+    .startup-timeline-layout {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: 36px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 1024px) {
+      .startup-timeline-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .timeline-card {
+      background: var(--bg-elev);
+      border: 1px solid var(--line-soft);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);
+    }
+    .timeline-card h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--teal);
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    .timeline-card p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--fg-mute);
+      margin-bottom: 24px;
+    }
+    .boot-timeline-diagram {
+      background: oklch(0.12 0.01 240);
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      padding: 20px;
+      margin: 20px 0;
+      position: relative;
+    }
+    .timeline-milestones {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .timeline-milestones::before {
+      content: "";
+      position: absolute;
+      top: 50%; left: 0; right: 0; height: 2px;
+      background: var(--line);
+      z-index: 0;
+    }
+    .milestone {
+      z-index: 1;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2.5px solid var(--line);
+      position: relative;
+    }
+    .milestone.active {
+      border-color: var(--teal);
+      background: var(--teal);
+      box-shadow: 0 0 10px var(--teal);
+    }
+    .milestone.delay {
+      border-color: var(--violet);
+      background: var(--violet);
+    }
+    .milestone-labels {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--fg-ghost);
+    }
+    .section-anchor-box {
+      background: var(--bg-elev);
+      border: 1px solid var(--line-soft);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);
+      margin-bottom: 80px;
+    }
+    .section-anchor-box h3 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--teal);
+      margin-top: 0;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- Aurora background elements -->
+    <div class="bg-fx" aria-hidden="true">
+      <div class="bg-grid"></div>
+      <div class="bg-glow t"></div>
+      <div class="bg-glow v"></div>
+    </div>
+
+    <!-- Floating Glass Nav -->
+    <nav class="nav">
+      <div class="container nav-inner">
+        <a class="brand" href="index.html">
+          <img src="./logo.png" alt="Noyare Logo" style="width: 24px; height: 24px; border-radius: 6px;">
+          NOYARE
+        </a>
+        <div class="nav-links">
+          <a class="nav-link" href="index.html">Home</a>
+          <div class="nav-dropdown">
+            <a class="nav-link" style="cursor: pointer;">Features ▾</a>
+            <div class="dropdown-menu">
+              <a href="dashboard.html" class="dropdown-item">📊 Dashboard</a>
+              <a href="processes.html" class="dropdown-item">⚙️ Processes</a>
+              <a href="ports.html" class="dropdown-item">🔌 Sockets & Ports</a>
+              <a href="network.html" class="dropdown-item">📡 DNS Sniffer</a>
+              <a href="storage.html" class="dropdown-item">💾 Disk Storage</a>
+              <a href="proxy.html" class="dropdown-item">🛡️ HTTPS Proxy</a>
+              <a href="memory.html" class="dropdown-item">🧠 RAM Optimizer</a>
+              <a href="startup.html" class="dropdown-item">🚀 Startup Apps</a>
+              <a href="insomnia.html" class="dropdown-item">☕ Keep Awake</a>
+              <a href="battery.html" class="dropdown-item">🔋 Battery Telemetry</a>
+              <a href="tweaks.html" class="dropdown-item">🔧 OS Tweaks</a>
+              <a href="tunnels.html" class="dropdown-item">🌐 Cloudflare Tunnel</a>
+              <a href="quicklook.html" class="dropdown-item">🔍 Spacebar Quick Look</a>
+            </div>
+          </div>
+          <a class="nav-link" href="index.html#specs">Specs</a>
+        </div>
+        <a class="nav-cta" href="https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare" target="_blank" rel="noopener noreferrer">
+          Get Noyare
+        </a>
+      </div>
+    </nav>
+
+    <!-- Subpage Hero -->
+    <header class="container subpage-hero">
+      <span class="hero-eyebrow"><span class="live-dot"></span>FEATURE 08 · STARTUP DELAY MANAGER</span>
+      <h1>Control your <span>boot experience.</span></h1>
+      <p class="lede">Eradicate login delays, analyze binary safety profiles, and spread system resources by introducing custom launch delays to heavy background applications.</p>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container">
+      <div class="startup-timeline-layout">
+        <!-- Timeline Info Card -->
+        <div class="timeline-card">
+          <h2>The Startup Latency Bottleneck</h2>
+          <p>
+            When logging into your account, the operating system is suddenly flooded. Heavy applications (Discord, Spotify, OneDrive) immediately attempt to initialize, triggering a massive CPU bottleneck and disk read queue.
+          </p>
+
+          <!-- Boot Latency Timeline -->
+          <div class="boot-timeline-diagram">
+            <div class="timeline-milestones">
+              <span class="milestone active"></span>
+              <span class="milestone active"></span>
+              <span class="milestone delay"></span>
+              <span class="milestone delay"></span>
+            </div>
+            <div class="milestone-labels">
+              <span>0s · Login</span>
+              <span>2s · System UI</span>
+              <span>10s · Spotify</span>
+              <span>30s · Discord</span>
+            </div>
+          </div>
+
+          <p style="font-size: 14.5px; color: var(--fg-mute); margin-top: 10px; line-height: 1.5;">
+            By scheduling background services to initialize with a staggered delay, your primary desktop shell loads instantly and stays perfectly responsive.
+          </p>
+        </div>
+
+        <!-- Interactive Test UI Section -->
+        <section id="test-ui" class="stage-container" style="background: var(--bg-elev); border-radius: 20px; border: 1px solid var(--line-soft); padding: 24px; box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);">
+          <div style="font-family: var(--mono); font-size: 10px; color: var(--teal); background: var(--teal-soft); padding: 4px 8px; border-radius: 4px; margin-bottom: 12px; display: inline-block;">INTERACTIVE TEST CONSOLE</div>
+          <div id="feature-demo"></div>
+        </section>
+      </div>
+
+      <!-- How it Works Section -->
+      <section id="how-it-works" class="section-anchor-box">
+        <h3>🚀 How the Startup App Delayer Works</h3>
+        <p style="font-size: 14.5px; line-height: 1.6; color: var(--fg-mute);">
+          Noyare schedules background executions cleanly, utilizing native registry scanners and system scheduler threads:
+        </p>
+        <ul style="color: var(--fg-mute); font-size: 14px; margin-top: 14px; padding-left: 20px;">
+          <li style="margin-bottom: 8px;"><b>Deep Registry Scans:</b> Audits classic Windows startup paths (like <code>HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run</code>) and <code>HKEY_LOCAL_MACHINE</code> directories.</li>
+          <li style="margin-bottom: 8px;"><b>Safe Delays Architecture:</b> To postpone execution safely without modifying original files, Noyare disables standard boot commands and registers a lightweight startup scheduling script inside Noyare's local assets.</li>
+          <li style="margin-bottom: 8px;"><b>Digital Sign Check:</b> Evaluates process binaries, automatically highlighting unsigned files or high impact processes that are safe to delay or disable entirely.</li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-inner">
+          <div>
+            <a class="brand" href="index.html"><img src="./logo.png" alt="Noyare Logo" style="width: 24px; height: 24px; border-radius: 6px;">NOYARE</a>
+            <p style="margin-top: 16px; color: var(--fg-mute); font-size: 13.5px; max-width: 36ch;">
+              A forensic system monitor. Built locally, runs locally, stays locally.
+            </p>
+          </div>
+          <div>
+            <h5>Product</h5>
+            <ul>
+              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="processes.html">Processes</a></li>
+              <li><a href="ports.html">Ports</a></li>
+              <li><a href="network.html">Network</a></li>
+              <li><a href="storage.html">Storage</a></li>
+              <li><a href="proxy.html">Proxy</a></li>
+              <li><a href="memory.html">Memory</a></li>
+              <li><a href="startup.html">Startup</a></li>
+              <li><a href="insomnia.html">Keep Awake</a></li>
+              <li><a href="battery.html">Battery</a></li>
+              <li><a href="tweaks.html">Tweaks</a></li>
+              <li><a href="tunnels.html">Tunnels</a></li>
+              <li><a href="quicklook.html">Quick Look</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Resources</h5>
+            <ul>
+              <li>Documentation</li>
+              <li>Changelog</li>
+              <li>Roadmap</li>
+              <li><a href="https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare" target="_blank" rel="noopener noreferrer">Microsoft Store</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Project</h5>
+            <ul>
+              <li>About</li>
+              <li>License</li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li>Contact</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-meta">
+          <span>NOYARE © 2026 · APACHE-2.0</span>
+          <span>BUILT IN RUST · DESIGNED IN THE OPEN</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Loading React Widgets -->
+  <script src="home-bits.js"></script>
+  <script src="home-features.js"></script>
+  <script>
+    ReactDOM.createRoot(document.getElementById("feature-demo")).render(
+      React.createElement(window.StageStartup)
+    );
+  </script>
+</body>
+</html>

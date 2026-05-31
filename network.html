@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Noyare Network — Real-Time Passive DNS Sniffer & Connections Monitor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Capture and trace outbound network traffic locally. Passive DNS sniffer maps domains, resolved IPs, and initiating processes with zero telemetry overhead.">
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="home.css">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+  <style>
+    /* Custom page-specific Network Layout styles */
+    .network-split-layout {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: 36px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 1024px) {
+      .network-split-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .flow-card {
+      background: var(--bg-elev);
+      border: 1px solid var(--line-soft);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);
+    }
+    .flow-card h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--teal);
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    .flow-card p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--fg-mute);
+      margin-bottom: 20px;
+    }
+    .dns-schematic-pipeline {
+      background: oklch(0.12 0.01 240);
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      padding: 20px;
+      margin: 24px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .pipeline-step {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .pipeline-step .step-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--teal);
+      background: var(--teal-soft);
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--teal);
+    }
+    .pipeline-step .step-text {
+      font-size: 13px;
+      color: var(--fg-mute);
+    }
+    .pipeline-step .step-text b {
+      color: var(--fg);
+    }
+    .pipeline-arrow {
+      height: 16px;
+      width: 1px;
+      background: dashed var(--line);
+      margin-left: 12px;
+      border-left: 1.5px dashed var(--line-soft);
+    }
+    .system-tech-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--teal);
+      background: var(--teal-soft);
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+    .section-anchor-box {
+      background: var(--bg-elev);
+      border: 1px solid var(--line-soft);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);
+      margin-bottom: 80px;
+    }
+    .section-anchor-box h3 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--teal);
+      margin-top: 0;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- Aurora background elements -->
+    <div class="bg-fx" aria-hidden="true">
+      <div class="bg-grid"></div>
+      <div class="bg-glow t"></div>
+      <div class="bg-glow v"></div>
+    </div>
+
+    <!-- Floating Glass Nav -->
+    <nav class="nav">
+      <div class="container nav-inner">
+        <a class="brand" href="index.html">
+          <img src="./logo.png" alt="Noyare Logo" style="width: 24px; height: 24px; border-radius: 6px;">
+          NOYARE
+        </a>
+        <div class="nav-links">
+          <a class="nav-link" href="index.html">Home</a>
+          <div class="nav-dropdown">
+            <a class="nav-link" style="cursor: pointer;">Features ▾</a>
+            <div class="dropdown-menu">
+              <a href="dashboard.html" class="dropdown-item">📊 Dashboard</a>
+              <a href="processes.html" class="dropdown-item">⚙️ Processes</a>
+              <a href="ports.html" class="dropdown-item">🔌 Sockets & Ports</a>
+              <a href="network.html" class="dropdown-item">📡 DNS Sniffer</a>
+              <a href="storage.html" class="dropdown-item">💾 Disk Storage</a>
+              <a href="proxy.html" class="dropdown-item">🛡️ HTTPS Proxy</a>
+              <a href="memory.html" class="dropdown-item">🧠 RAM Optimizer</a>
+              <a href="startup.html" class="dropdown-item">🚀 Startup Apps</a>
+              <a href="insomnia.html" class="dropdown-item">☕ Keep Awake</a>
+              <a href="battery.html" class="dropdown-item">🔋 Battery Telemetry</a>
+              <a href="tweaks.html" class="dropdown-item">🔧 OS Tweaks</a>
+              <a href="tunnels.html" class="dropdown-item">🌐 Cloudflare Tunnel</a>
+              <a href="quicklook.html" class="dropdown-item">🔍 Spacebar Quick Look</a>
+            </div>
+          </div>
+          <a class="nav-link" href="index.html#specs">Specs</a>
+        </div>
+        <a class="nav-cta" href="https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare" target="_blank" rel="noopener noreferrer">
+          Get Noyare
+        </a>
+      </div>
+    </nav>
+
+    <!-- Subpage Hero -->
+    <header class="container subpage-hero">
+      <span class="hero-eyebrow"><span class="live-dot"></span>FEATURE 04 · DNS & CONNECTION STREAM</span>
+      <h1>See every byte <span>leave your box.</span></h1>
+      <p class="lede">Interpose outbound DNS queries and active network sockets locally, correlating traffic surges directly to the software PIDs that initiated them.</p>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container">
+      <div class="network-split-layout">
+        <!-- Text & Flow Card -->
+        <div class="flow-card">
+          <h2>Outbound Network Telemetry Pipeline</h2>
+          <p>
+            In an era dominated by cloud services, modern software is constantly communicating. Silent telemetry logs, diagnostic reports, and analytics datasets flow outward from your desktop. Noyare restores full visual control over your computer's internet traffic.
+          </p>
+
+          <!-- DNS Pipe schematic -->
+          <div class="dns-schematic-pipeline">
+            <div class="pipeline-step">
+              <span class="step-num">1</span>
+              <span class="step-text">Application binary requests DNS resolution (e.g. <b>telemetry.ms.com</b>)</span>
+            </div>
+            <div class="pipeline-arrow"></div>
+            <div class="pipeline-step">
+              <span class="step-num">2</span>
+              <span class="step-text">Noyare's passive raw sockets loop captures query from network interface</span>
+            </div>
+            <div class="pipeline-arrow"></div>
+            <div class="pipeline-step">
+              <span class="step-num">3</span>
+              <span class="step-text">Engine resolves domain, correlates owner <b>PID [17672]</b> and logs details</span>
+            </div>
+          </div>
+
+          <p style="font-size: 14px; color: var(--fg-mute); margin-top: 16px;">
+            This correlation enables developers to identify and block spyware or heavy tracking scripts immediately, without complex command line filters.
+          </p>
+        </div>
+
+        <!-- Interactive Test UI Section -->
+        <section id="test-ui" class="stage-container" style="background: var(--bg-elev); border-radius: 20px; border: 1px solid var(--line-soft); padding: 24px; box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);">
+          <div class="system-tech-badge">INTERACTIVE TEST CONSOLE</div>
+          <div id="feature-demo"></div>
+        </section>
+      </div>
+
+      <!-- How it Works Section -->
+      <section id="how-it-works" class="section-anchor-box">
+        <h3>⚡ How the Network Sniffer Works</h3>
+        <p style="font-size: 14.5px; line-height: 1.6; color: var(--fg-mute);">
+          Under the hood, Noyare leverages standard operating system socket interfaces to query connections asynchronously. For the DNS sniffer, the Rust backend opens a passive packet capture thread:
+        </p>
+        <ul style="color: var(--fg-mute); font-size: 14px; margin-top: 14px; padding-left: 20px;">
+          <li style="margin-bottom: 8px;"><b>Passive Socket Sniffing:</b> Spawns a dedicated Rust worker thread that reads from standard system sockets, avoiding heavy dependencies like NPcap or raw device drivers.</li>
+          <li style="margin-bottom: 8px;"><b>Process Correlation:</b> Uses native Windows APIs like <code>GetExtendedTcpTable</code> and <code>GetExtendedUdpTable</code> in <code>iphlpapi.dll</code> to map active port flows directly to their owning PID at runtime.</li>
+          <li style="margin-bottom: 8px;"><b>Zero Telemetry Overhead:</b> The sniffer functions purely in-memory. Collected connection details are flushed on closure and never stored in files or shared off your machine.</li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-inner">
+          <div>
+            <a class="brand" href="index.html"><img src="./logo.png" alt="Noyare Logo" style="width: 24px; height: 24px; border-radius: 6px;">NOYARE</a>
+            <p style="margin-top: 16px; color: var(--fg-mute); font-size: 13.5px; max-width: 36ch;">
+              A forensic system monitor. Built locally, runs locally, stays locally.
+            </p>
+          </div>
+          <div>
+            <h5>Product</h5>
+            <ul>
+              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="processes.html">Processes</a></li>
+              <li><a href="ports.html">Ports</a></li>
+              <li><a href="network.html">Network</a></li>
+              <li><a href="storage.html">Storage</a></li>
+              <li><a href="proxy.html">Proxy</a></li>
+              <li><a href="memory.html">Memory</a></li>
+              <li><a href="startup.html">Startup</a></li>
+              <li><a href="insomnia.html">Keep Awake</a></li>
+              <li><a href="battery.html">Battery</a></li>
+              <li><a href="tweaks.html">Tweaks</a></li>
+              <li><a href="tunnels.html">Tunnels</a></li>
+              <li><a href="quicklook.html">Quick Look</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Resources</h5>
+            <ul>
+              <li>Documentation</li>
+              <li>Changelog</li>
+              <li>Roadmap</li>
+              <li><a href="https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare" target="_blank" rel="noopener noreferrer">Microsoft Store</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Project</h5>
+            <ul>
+              <li>About</li>
+              <li>License</li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li>Contact</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-meta">
+          <span>NOYARE © 2026 · APACHE-2.0</span>
+          <span>BUILT IN RUST · DESIGNED IN THE OPEN</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Loading React Widgets -->
+  <script src="home-bits.js"></script>
+  <script src="home-features.js"></script>
+  <script>
+    ReactDOM.createRoot(document.getElementById("feature-demo")).render(
+      React.createElement(window.StageNetwork)
+    );
+  </script>
+</body>
+</html>

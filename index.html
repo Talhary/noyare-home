@@ -3,8 +3,10 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Noyare — see your machine think</title>
+  <title>Noyare — See Your Machine Think</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="Noyare is a forensic system monitor for your desk. Watch every process, every open port, every DNS lookup, every byte on disk — all in one calm, observable surface.">
   <link rel="icon" type="image/png" href="./favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +22,1334 @@
 </head>
 
 <body>
-  <div id="root"></div>
+  <div class="shell" data-screen-label="Noyare Home">
+    <!-- Animated background grid -->
+    <div class="bg-fx" aria-hidden="true">
+      <div class="bg-grid"></div>
+      <div class="bg-glow t"></div>
+      <div class="bg-glow v"></div>
+      <div class="bg-glow c"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="nav">
+      <div class="container nav-inner">
+        <a class="brand" href="index.html">
+          <img src="./logo.png" alt="Noyare Logo" style="width: 24px; height: 24px; border-radius: 6px;">
+          NOYARE
+        </a>
+        <div class="nav-links">
+          <a class="nav-link" href="index.html">Home</a>
+          <div class="nav-dropdown">
+            <a class="nav-link" style="cursor: pointer;">Features ▾</a>
+            <div class="dropdown-menu">
+              <a href="dashboard.html" class="dropdown-item">📊 Dashboard</a>
+              <a href="processes.html" class="dropdown-item">⚙️ Processes</a>
+              <a href="ports.html" class="dropdown-item">🔌 Sockets & Ports</a>
+              <a href="network.html" class="dropdown-item">📡 DNS Sniffer</a>
+              <a href="storage.html" class="dropdown-item">💾 Disk Storage</a>
+              <a href="proxy.html" class="dropdown-item">🛡️ HTTPS Proxy</a>
+              <a href="memory.html" class="dropdown-item">🧠 RAM Optimizer</a>
+              <a href="startup.html" class="dropdown-item">🚀 Startup Apps</a>
+              <a href="insomnia.html" class="dropdown-item">☕ Keep Awake</a>
+              <a href="battery.html" class="dropdown-item">🔋 Battery Telemetry</a>
+              <a href="tweaks.html" class="dropdown-item">🔧 OS Tweaks</a>
+              <a href="tunnels.html" class="dropdown-item">🌐 Cloudflare Tunnel</a>
+              <a href="quicklook.html" class="dropdown-item">🔍 Spacebar Quick Look</a>
+              <a href="workspace.html" class="dropdown-item">📁 Workspace Cockpit</a>
+            </div>
+          </div>
+          <a class="nav-link" href="index.html#specs">Specs</a>
+        </div>
+        <a class="nav-cta" href="https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare"
+          target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+            style="margin-right: 4px;">
+            <path d="M12 3v12M6 11l6 6 6-6M5 21h14"></path>
+          </svg>
+          Get Noyare
+        </a>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="top">
+      <div class="container">
+        <div class="reveal in">
+          <span class="hero-eyebrow">
+            <span class="live-dot"></span>
+            NOYARE · V0.1 · BUILT IN RUST
+          </span>
+        </div>
+        <div class="reveal in" style="transition-delay: 80ms;">
+          <h1>See your <span class="accent">machine think</span>, second by second.</h1>
+        </div>
+        <div class="reveal in" style="transition-delay: 160ms;">
+          <p class="lede">Noyare is a forensic system monitor for your desk. Watch every process, every open port, every
+            DNS lookup, every byte on disk — all in one calm, observable surface.</p>
+        </div>
+        <div class="reveal in" style="transition-delay: 240ms;">
+          <div class="hero-actions">
+            <button class="btn-primary"
+              onclick="window.open('https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare', '_blank')">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                style="margin-right: 4px;">
+                <path d="M12 3v12M6 11l6 6 6-6M5 21h14"></path>
+              </svg>
+              Get it from Microsoft Store
+            </button>
+          </div>
+        </div>
+        <div class="reveal in" style="transition-delay: 320ms;">
+          <div class="hero-meta">
+            <div class="item">
+              <b>~18 MB</b>
+              <span>self-contained install</span>
+            </div>
+            <div class="item">
+              <b>0.4% CPU</b>
+              <span>at rest, polling every 1.1s</span>
+            </div>
+            <div class="item">
+              <b>1.1 s</b>
+              <span>sampling resolution</span>
+            </div>
+            <div class="item">
+              <b>Tauri · Rust</b>
+              <span>native, no Electron</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Mockup Window -->
+        <div class="reveal in" style="transition-delay: 400ms;">
+          <div class="mock-window">
+            <div class="mock-titlebar">
+              <div class="mock-controls">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
+              </div>
+              <div class="mock-title">Noyare — Forensic Cockpit v0.1.5</div>
+              <div class="mock-status">
+                <span class="pulse-d"></span>
+                LIVE · 1.1s
+              </div>
+            </div>
+            <div class="mock-body">
+              <div class="mock-sidebar" id="hero-sidebar">
+                <div class="mock-sidebar-header">SYSTEM COCKPIT</div>
+                <button class="mock-sidebar-item active" data-tab="dashboard">
+                  <span class="icon">📊</span>
+                  <span class="label">Dashboard</span>
+                </button>
+                <button class="mock-sidebar-item" data-tab="processes">
+                  <span class="icon">⚙️</span>
+                  <span class="label">Processes</span>
+                </button>
+                <button class="mock-sidebar-item" data-tab="ports">
+                  <span class="icon">🔌</span>
+                  <span class="label">Sockets & Ports</span>
+                </button>
+                <button class="mock-sidebar-item" data-tab="network">
+                  <span class="icon">📡</span>
+                  <span class="label">DNS Sniffer</span>
+                </button>
+                <button class="mock-sidebar-item" data-tab="memory">
+                  <span class="icon">🧠</span>
+                  <span class="label">RAM Optimizer</span>
+                </button>
+                <button class="mock-sidebar-item" data-tab="quicklook">
+                  <span class="icon">🔍</span>
+                  <span class="label">Quick Look</span>
+                </button>
+                <button class="mock-sidebar-item" data-tab="tweaks">
+                  <span class="icon">🔧</span>
+                  <span class="label">OS Tweaks</span>
+                </button>
+                <button class="mock-sidebar-item" data-tab="startup">
+                  <span class="icon">🚀</span>
+                  <span class="label">Startup Apps</span>
+                </button>
+                <button class="mock-sidebar-item" data-tab="insomnia">
+                  <span class="icon">☕</span>
+                  <span class="label">Keep Awake</span>
+                </button>
+                <button class="mock-sidebar-item" data-tab="battery">
+                  <span class="icon">🔋</span>
+                  <span class="label">Battery Telemetry</span>
+                </button>
+                <button class="mock-sidebar-item" data-tab="tunnels">
+                  <span class="icon">🌐</span>
+                  <span class="label">Cloudflare Tunnels</span>
+                </button>
+                <button class="mock-sidebar-item" data-tab="proxy">
+                  <span class="icon">🛡️</span>
+                  <span class="label">HTTPS Proxy</span>
+                </button>
+                <button class="mock-sidebar-item" data-tab="storage">
+                  <span class="icon">💾</span>
+                  <span class="label">Disk Cleaner</span>
+                </button>
+              </div>
+              <div class="mock-content mock-window-content" id="hero-mock-root">
+                <!-- React will mount the active stage here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="container" style="margin-top: 80px;">
+      <div class="stats">
+        <div class="stat">
+          <span class="l">SAMPLE INTERVAL</span>
+          <span class="v"><span class="countup" data-to="1.1" data-decimals="1">0.0</span><span
+              class="unit">s</span></span>
+          <span class="d">Polled every beat, no jitter.</span>
+        </div>
+        <div class="stat">
+          <span class="l">PROCESSES TRACKED</span>
+          <span class="v"><span class="countup" data-to="399" data-decimals="0">0</span></span>
+          <span class="d">Every PID, every binary, every thread.</span>
+        </div>
+        <div class="stat">
+          <span class="l">SOCKETS WATCHED</span>
+          <span class="v"><span class="countup" data-to="162" data-decimals="0">0</span></span>
+          <span class="d">TCP, UDP, IPv4, IPv6 — all live.</span>
+        </div>
+        <div class="stat">
+          <span class="l">CPU OVERHEAD</span>
+          <span class="v">&lt;<span class="countup" data-to="1" data-decimals="0">0</span><span
+              class="unit">%</span></span>
+          <span class="d">Idle while you work.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Moving Marquee Loop -->
+    <div class="signal-ticker">
+      <div class="signal-track" id="signal-marquee-track">
+        <!-- populated dynamically via JS -->
+      </div>
+    </div>
+
+    <!-- Bento Grid Section -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-eyebrow"><span class="num">02</span>INTERACTIVE DEMO CONTROL CENTER</span>
+        </div>
+        <div class="reveal" style="transition-delay: 60ms;">
+          <h2>Thirteen native tools, <em>live preview.</em></h2>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <p class="lede">Noyare wraps the entire system diagnostic layer into an ultra-performance cockpit. Interact
+            with the live mockups in the bento grid below and explore their dedicated, content-rich deep-dives.</p>
+        </div>
+        <div class="bento-grid">
+          <!-- 01 Dashboard -->
+          <div class="reveal" style="transition-delay: 0ms;">
+            <div class="bento-card col-span-2">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-num">01</span>
+                <a href="dashboard.html" class="hover-underline"
+                  style="font-size: 12px; color: var(--teal); font-weight: 600;">Deep-dive Page →</a>
+              </div>
+              <h3>Dashboard</h3>
+              <p>Full-bleed live activity ribbon, per-core sparklines, memory & swap breakouts.</p>
+              <div class="stage-mini" id="bento-stage-dashboard"></div>
+            </div>
+          </div>
+          <!-- 02 Processes -->
+          <div class="reveal" style="transition-delay: 50ms;">
+            <div class="bento-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-num">02</span>
+                <a href="processes.html" class="hover-underline"
+                  style="font-size: 12px; color: var(--teal); font-weight: 600;">Deep-dive Page →</a>
+              </div>
+              <h3>Processes</h3>
+              <p>Every PID with CPU/MEM, trust evaluation, sort & filter, drill into paths.</p>
+              <div class="stage-mini" id="bento-stage-processes"></div>
+            </div>
+          </div>
+          <!-- 03 Ports -->
+          <div class="reveal" style="transition-delay: 100ms;">
+            <div class="bento-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-num">03</span>
+                <a href="ports.html" class="hover-underline"
+                  style="font-size: 12px; color: var(--teal); font-weight: 600;">Deep-dive Page →</a>
+              </div>
+              <h3>Ports</h3>
+              <p>All listening & established sockets. Risk-classified — SAFE / EXPOSED / SYSTEM.</p>
+              <div class="stage-mini" id="bento-stage-ports"></div>
+            </div>
+          </div>
+          <!-- 04 Network -->
+          <div class="reveal" style="transition-delay: 150ms;">
+            <div class="bento-card col-span-2">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-num">04</span>
+                <a href="network.html" class="hover-underline"
+                  style="font-size: 12px; color: var(--teal); font-weight: 600;">Deep-dive Page →</a>
+              </div>
+              <h3>Network</h3>
+              <p>Active connections + a live DNS sniffer streaming every lookup leaving your box.</p>
+              <div class="stage-mini" id="bento-stage-network"></div>
+            </div>
+          </div>
+          <!-- 05 Storage -->
+          <div class="reveal" style="transition-delay: 200ms;">
+            <div class="bento-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-num">05</span>
+                <a href="storage.html" class="hover-underline"
+                  style="font-size: 12px; color: var(--teal); font-weight: 600;">Deep-dive Page →</a>
+              </div>
+              <h3>Storage</h3>
+              <p>Quick cleaner for caches and temp, plus a recursive disk analyzer with treemaps.</p>
+              <div class="stage-mini" id="bento-stage-storage"></div>
+            </div>
+          </div>
+          <!-- 06 Proxy -->
+          <div class="reveal" style="transition-delay: 250ms;">
+            <div class="bento-card col-span-2">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-num">06</span>
+                <a href="proxy.html" class="hover-underline"
+                  style="font-size: 12px; color: var(--teal); font-weight: 600;">Deep-dive Page →</a>
+              </div>
+              <h3>Proxy</h3>
+              <p>Local HTTPS proxy — capture, break on, modify, repeat any request.</p>
+              <div class="stage-mini" id="bento-stage-proxy"></div>
+            </div>
+          </div>
+          <!-- 07 Memory -->
+          <div class="reveal" style="transition-delay: 300ms;">
+            <div class="bento-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-num">07</span>
+                <a href="memory.html" class="hover-underline"
+                  style="font-size: 12px; color: var(--teal); font-weight: 600;">Deep-dive Page →</a>
+              </div>
+              <h3>Memory</h3>
+              <p>Intelligent Standby List Cleaner (ISLC) engine to purge memory and free RAM.</p>
+              <div class="stage-mini" id="bento-stage-memory"></div>
+            </div>
+          </div>
+          <!-- 08 Startup -->
+          <div class="reveal" style="transition-delay: 350ms;">
+            <div class="bento-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-num">08</span>
+                <a href="startup.html" class="hover-underline"
+                  style="font-size: 12px; color: var(--teal); font-weight: 600;">Deep-dive Page →</a>
+              </div>
+              <h3>Startup</h3>
+              <p>Manage startup applications, analyze safety, and configure custom launch delays.</p>
+              <div class="stage-mini" id="bento-stage-startup"></div>
+            </div>
+          </div>
+          <!-- 09 Insomnia -->
+          <div class="reveal" style="transition-delay: 400ms;">
+            <div class="bento-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-num">09</span>
+                <a href="insomnia.html" class="hover-underline"
+                  style="font-size: 12px; color: var(--teal); font-weight: 600;">Deep-dive Page →</a>
+              </div>
+              <h3>Insomnia</h3>
+              <p>Keep-awake power manager triggered by process watch lists, battery levels, or network.</p>
+              <div class="stage-mini" id="bento-stage-insomnia"></div>
+            </div>
+          </div>
+          <!-- 10 Battery -->
+          <div class="reveal" style="transition-delay: 450ms;">
+            <div class="bento-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-num">10</span>
+                <a href="battery.html" class="hover-underline"
+                  style="font-size: 12px; color: var(--teal); font-weight: 600;">Deep-dive Page →</a>
+              </div>
+              <h3>Battery</h3>
+              <p>Deep telemetry report of wear levels, cycle counts, voltage, and discharge logs.</p>
+              <div class="stage-mini" id="bento-stage-battery"></div>
+            </div>
+          </div>
+          <!-- 11 Tweaks -->
+          <div class="reveal" style="transition-delay: 500ms;">
+            <div class="bento-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-num">11</span>
+                <a href="tweaks.html" class="hover-underline"
+                  style="font-size: 12px; color: var(--teal); font-weight: 600;">Deep-dive Page →</a>
+              </div>
+              <h3>Tweaks</h3>
+              <p>Windows customization hub for scrollbars, menu delays, snap layouts, and privacy.</p>
+              <div class="stage-mini" id="bento-stage-tweaks"></div>
+            </div>
+          </div>
+          <!-- 12 Tunnels -->
+          <div class="reveal" style="transition-delay: 550ms;">
+            <div class="bento-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-num">12</span>
+                <a href="tunnels.html" class="hover-underline"
+                  style="font-size: 12px; color: var(--teal); font-weight: 600;">Deep-dive Page →</a>
+              </div>
+              <h3>Tunnels</h3>
+              <p>Cloudflare tunnel daemon. Tunnel localhost to public domains with traffic metrics.</p>
+              <div class="stage-mini" id="bento-stage-tunnels"></div>
+            </div>
+          </div>
+          <!-- 13 Quick Look -->
+          <div class="reveal" style="transition-delay: 600ms;">
+            <div class="bento-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="tag-num">13</span>
+                <a href="quicklook.html" class="hover-underline"
+                  style="font-size: 12px; color: var(--teal); font-weight: 600;">Deep-dive Page →</a>
+              </div>
+              <h3>Quick Look</h3>
+              <p>Instant file previewer (Spacebar hook) for code, images, audio, video, and archives.</p>
+              <div class="stage-mini" id="bento-stage-quicklook"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Alternating Detailed Feature Sections -->
+
+    <!-- Feature 03: Dashboard -->
+    <section class="feature" id="sec-dashboard">
+      <div class="container feature-inner">
+        <div class="feature-text">
+          <div class="reveal">
+            <div class="feature-num"><span class="bar"></span>03 · THE DASHBOARD</div>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h3>A single pane where every signal lives.</h3>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p class="desc">Open Noyare, see your machine. A 90-second multi-trace ribbon overlays CPU, RAM, network,
+              and disk. Per-core sparklines breathe at 1.1s. Memory splits into apps / system / cache / free. Drives,
+              interfaces, and DNS sit one click below.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <ul class="bullets">
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Full-bleed live ribbon</b> — four overlaid traces, glow rendered.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Per-core grid</b> — every CPU core with its own 30-tick sparkline.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Memory segmentation</b> — apps · system · cache · free + swap.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Drive health</b> — every mount, every fill rate, every alert.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="stage" id="feature-stage-dashboard"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 04: Processes -->
+    <section class="feature reverse" id="sec-processes">
+      <div class="container feature-inner">
+        <div class="feature-text">
+          <div class="reveal">
+            <div class="feature-num"><span class="bar"></span>04 · PROCESSES</div>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h3>Every PID, every binary, every byte.</h3>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p class="desc">A sortable, filterable table of every running process — name, PID, CPU, memory, path. Inline
+              mini-bars show CPU load at a glance. Trust evaluation flags unsigned binaries. Drill into child processes;
+              end tasks in a click.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <ul class="bullets">
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Live ticking</b> — CPU and memory update every 1.1s, no flicker.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Trust evaluation</b> — every binary scored: trusted · suspect · blocked.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Search anywhere</b> — name, path, PID, or process group.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Smart sorts</b> — CPU, memory, PID, name, alphabetical, recent.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="stage" id="feature-stage-processes"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 05: Ports -->
+    <section class="feature" id="sec-ports">
+      <div class="container feature-inner">
+        <div class="feature-text">
+          <div class="reveal">
+            <div class="feature-num"><span class="bar"></span>05 · PORTS</div>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h3>Open sockets, classified at a glance.</h3>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p class="desc">Every listening port and every established connection laid out as a grid, each cell
+              color-tagged by exposure. Click any cell to jump to the owning process. UDP and TCP shown side by side;
+              IPv4 and IPv6 unified.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <ul class="bullets">
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Risk classification</b> — SAFE · EXPOSED · SYSTEM, scored locally.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Loopback first</b> — separate localhost-only listeners from public.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>State filtering</b> — LISTENING, ESTABLISHED, TIME_WAIT, CLOSED.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Process linkage</b> — jump straight to the binary that owns the port.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="stage" id="feature-stage-ports"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 06: Network -->
+    <section class="feature reverse" id="sec-network">
+      <div class="container feature-inner">
+        <div class="feature-text">
+          <div class="reveal">
+            <div class="feature-num"><span class="bar"></span>06 · NETWORK</div>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h3>See every byte leave your machine.</h3>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p class="desc">A passive DNS sniffer streams every outbound lookup in real time — domain, resolved IP,
+              originating process. Active connections list every flow with remote IP, duration, and reverse-resolved
+              hostname. Nothing is sent anywhere; everything is captured locally.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <ul class="bullets">
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Live DNS sniffer</b> — every lookup, with the process that asked.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Connection map</b> — local ↔ remote, protocol, duration.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Per-interface meters</b> — Wi-Fi, Ethernet, virtual adapters.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Domain-level filters</b> — block, log, alert by domain or IP range.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="stage" id="feature-stage-network"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 07: Storage -->
+    <section class="feature" id="sec-storage">
+      <div class="container feature-inner">
+        <div class="feature-text">
+          <div class="reveal">
+            <div class="feature-num"><span class="bar"></span>07 · STORAGE</div>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h3>Reclaim the disk, one click.</h3>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p class="desc">Two tools in one screen. The Quick Cleaner scans every known cache location — browsers,
+              package managers, build tooling, system temp — and lets you reclaim them in one shot. The Disk Analyzer
+              recurses a folder and ranks children by size with live treemap viz.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <ul class="bullets">
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>12 cache scanners</b> — browsers, npm, pip, yarn, Docker, VSCode…</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Live tally</b> — running sum updates as you toggle categories.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Disk analyzer</b> — sort any folder by size with bar distribution.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Safe-by-default</b> — never touches user docs, only known caches.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="stage" id="feature-stage-storage"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 08: Proxy -->
+    <section class="feature reverse" id="sec-proxy">
+      <div class="container feature-inner">
+        <div class="feature-text">
+          <div class="reveal">
+            <div class="feature-num"><span class="bar"></span>08 · PROXY INTERCEPT</div>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h3>A pocket-sized Charles Proxy.</h3>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p class="desc">A local HTTPS proxy with a beautiful inspector. Capture every request from every binary,
+              break on response, modify headers and body, then send it back. Repeater rebuilds requests with new params.
+              Export the CA in one click — fully self-signed, fully local.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <ul class="bullets">
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>HTTP/HTTPS capture</b> — full headers, body, timing, every flow.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Break on rules</b> — pause requests matching any predicate.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Repeater</b> — replay any captured request with edits.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Self-signed CA</b> — export, install, rotate at any moment.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="stage" id="feature-stage-proxy"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 09: Memory -->
+    <section class="feature" id="sec-memory">
+      <div class="container feature-inner">
+        <div class="feature-text">
+          <div class="reveal">
+            <div class="feature-num"><span class="bar"></span>09 · MEMORY CLEANER</div>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h3>Optimize system memory instantly.</h3>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p class="desc">Standby memory lists and cached pages can clog your system, leaving less active RAM.
+              Noyare's RAM Cleaner introduces an Intelligent Standby List Cleaner (ISLC) engine to automatically free up
+              caches when memory thresholds are hit, alongside manual working set trimming.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <ul class="bullets">
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>ISLC Engine</b> — Auto-purges standby cache based on free RAM limits.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Working Set Trimmer</b> — Reclaims active process memory buffers safely.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Live Cache Tally</b> — Visualizes RAM consumption across system categories.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Low Overhead</b> — Runs in the background without stealing CPU cycles.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="stage" id="feature-stage-memory"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 10: Startup -->
+    <section class="feature reverse" id="sec-startup">
+      <div class="container feature-inner">
+        <div class="feature-text">
+          <div class="reveal">
+            <div class="feature-num"><span class="bar"></span>10 · STARTUP APPS</div>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h3>Control your boot experience.</h3>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p class="desc">Heavy login programs increase startup latency. Noyare lists all registered startup apps in
+              registry keys and startup folders, computes their impact, and lets you disable, delete, or configure
+              custom launch delays so your computer boots instantly.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <ul class="bullets">
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Launch Delays</b> — Postpone heavy boot items to ease initial CPU load.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Registry Analyzer</b> — Scans standard and advanced system startup paths.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Trust Indicators</b> — Flags unsigned startup binaries automatically.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Toggle & Delete</b> — Safely enable, disable, or delete boot tasks.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="stage" id="feature-stage-startup"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 11: Keep Awake -->
+    <section class="feature" id="sec-insomnia">
+      <div class="container feature-inner">
+        <div class="feature-text">
+          <div class="reveal">
+            <div class="feature-num"><span class="bar"></span>11 · INSOMNIA MODE</div>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h3>Your machine stays awake, on your terms.</h3>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p class="desc">Prevent system sleep or screen display timeout during long renders, downloads, or builds.
+              Set simple continuous overrides or build advanced process-based rules, network transfer limits, and
+              battery safeguard thresholds.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <ul class="bullets">
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Continuous Wake</b> — Prevent screen and sleep cycles indefinitely.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Process Watch</b> — Only keep awake while specific processes are running.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Battery Threshold</b> — Automatically deactivate below set battery power.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Network Guard</b> — Keep awake during active file transfers.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="stage" id="feature-stage-insomnia"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 12: Battery -->
+    <section class="feature reverse" id="sec-battery">
+      <div class="container feature-inner">
+        <div class="feature-text">
+          <div class="reveal">
+            <div class="feature-num"><span class="bar"></span>12 · BATTERY DIAGNOSTICS</div>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h3>Precision power telemetry.</h3>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p class="desc">Monitor battery wear level, charge cycles, health status, and live discharge rates. Keep
+              track of battery capacity history logs over time and generate a clean Windows battery diagnostics report
+              in one click.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <ul class="bullets">
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Wear Telemetry</b> — Track design capacity vs current full charge capacity.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Discharge Rates</b> — Watch energy flow in Watts under different system loads.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>History Logs</b> — Maintain historic records of battery level and health.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Report Generator</b> — Build and export complete HTML diagnostic sheets.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="stage" id="feature-stage-battery"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 13: Tweaks -->
+    <section class="feature" id="sec-tweaks">
+      <div class="container feature-inner">
+        <div class="feature-text">
+          <div class="reveal">
+            <div class="feature-num"><span class="bar"></span>13 · SYSTEM TWEAKS</div>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h3>Personalize and optimize your desktop.</h3>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p class="desc">Noyare offers a dashboard of deep operating system tweaks. Shrink or expand scrollbars,
+              configure hover focus timeouts, tweak explorer file display speeds, and disable background telemetry
+              trackers.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <ul class="bullets">
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Scrollbar Customizer</b> — Edit visual scrollbar widths across the OS.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Focus Timeouts</b> — Control menu delay reaction speeds under the mouse.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Telemetry Block</b> — Toggles to disable background usage logging.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Explorer Speedups</b> — Registry-based response timing enhancements.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="stage" id="feature-stage-tweaks"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 14: Tunnels -->
+    <section class="feature reverse" id="sec-tunnels">
+      <div class="container feature-inner">
+        <div class="feature-text">
+          <div class="reveal">
+            <div class="feature-num"><span class="bar"></span>14 · LOCAL TUNNELS</div>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h3>Expose your ports instantly.</h3>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p class="desc">Test webhooks, showcase progress, or route traffic securely. Noyare encapsulates Cloudflare
+              tunnel processes, allowing you to spin up secure public tunnels for local ports and monitor live bandwidth
+              and latency stats.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <ul class="bullets">
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Zero Configuration</b> — Spin up cloudflared instances in a single tap.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Public URLs</b> — Mapped to secure HTTPS trycloudflare subdomains.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Bandwidth Logs</b> — Live data throughput meters showing Up/Down stats.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Process Shield</b> — Native process management wraps the tunnel daemon.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="stage" id="feature-stage-tunnels"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature 15: Quick Look -->
+    <section class="feature" id="sec-quicklook">
+      <div class="container feature-inner">
+        <div class="feature-text">
+          <div class="reveal">
+            <div class="feature-num"><span class="bar"></span>15 · QUICK LOOK</div>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h3>Spacebar file preview, native and fast.</h3>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p class="desc">Select a file in Windows Explorer, tap the Spacebar, and instantly see its contents in a
+              translucent, fluid overlay. Works for text files (with live editing and saving), images (with cropping),
+              audio, video, and archive structures.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <ul class="bullets">
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Spacebar Hook</b> — Low-level keyboard hook binds preview to Spacebar.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Code Editor</b> — View code with syntax highlighting, edit, and save changes.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Image Cropper</b> — Crop, inspect, and export image assets instantly.</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m5 12 5 5L20 7"></path>
+                </svg>
+                <span><b>Archive Reader</b> — List files inside zip and tar.gz files without unpacking.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <div class="stage" id="feature-stage-quicklook"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toggles / Settings Strip -->
+    <section class="section" id="settings">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-eyebrow"><span class="num">16</span>SETTINGS</span>
+        </div>
+        <div class="reveal" style="transition-delay: 60ms;">
+          <h2>Yours, <em>to the millisecond.</em></h2>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <p class="lede">Noyare ships with calm defaults but stays out of your way. Theme, sampling cadence, sniffer
+            behavior, trust evaluation — pin every knob.</p>
+        </div>
+        <div class="toggles-strip">
+          <div class="reveal" style="transition-delay: 0ms;">
+            <div class="toggle-card">
+              <span class="tswatch">DARK · LIGHT</span>
+              <span class="ti">01</span>
+              <span class="tn">Theme</span>
+              <span class="td">Dark, light, or follow your OS. Both palettes are first-class.</span>
+            </div>
+          </div>
+          <div class="reveal" style="transition-delay: 50ms;">
+            <div class="toggle-card">
+              <span class="tswatch">LABELS · ICONS</span>
+              <span class="ti">02</span>
+              <span class="tn">Sidebar style</span>
+              <span class="td">Full labels or icon-only — toggle at any time.</span>
+            </div>
+          </div>
+          <div class="reveal" style="transition-delay: 100ms;">
+            <div class="toggle-card">
+              <span class="tswatch">0.25s – 5s</span>
+              <span class="ti">03</span>
+              <span class="tn">Sample interval</span>
+              <span class="td">Default 1.1s. Push to 250ms for forensics or 5s to coast.</span>
+            </div>
+          </div>
+          <div class="reveal" style="transition-delay: 150ms;">
+            <div class="toggle-card">
+              <span class="tswatch">ON · OFF</span>
+              <span class="ti">04</span>
+              <span class="tn">Sniffer</span>
+              <span class="td">DNS lookup capture, with auto-flush windows.</span>
+            </div>
+          </div>
+          <div class="reveal" style="transition-delay: 200ms;">
+            <div class="toggle-card">
+              <span class="tswatch">ON · OFF</span>
+              <span class="ti">05</span>
+              <span class="tn">Trust eval</span>
+              <span class="td">Verify signatures on every running binary, in the background.</span>
+            </div>
+          </div>
+          <div class="reveal" style="transition-delay: 250ms;">
+            <div class="toggle-card">
+              <span class="tswatch">ON · OFF</span>
+              <span class="ti">06</span>
+              <span class="tn">Auto-pause</span>
+              <span class="td">Reduce work when the window loses focus.</span>
+            </div>
+          </div>
+          <div class="reveal" style="transition-delay: 300ms;">
+            <div class="toggle-card">
+              <span class="tswatch">ROTATE</span>
+              <span class="ti">07</span>
+              <span class="tn">Proxy CA</span>
+              <span class="td">Regenerate the root certificate any time.</span>
+            </div>
+          </div>
+          <div class="reveal" style="transition-delay: 350ms;">
+            <div class="toggle-card">
+              <span class="tswatch">DANGER</span>
+              <span class="ti">08</span>
+              <span class="tn">Reset</span>
+              <span class="td">Wipe local config and start clean.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Specs Section -->
+    <section class="section" id="specs">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-eyebrow"><span class="num">17</span>SPECS</span>
+        </div>
+        <div class="reveal" style="transition-delay: 60ms;">
+          <h2>Built for <em>your machine.</em></h2>
+        </div>
+        <div class="reveal" style="transition-delay: 120ms;">
+          <p class="lede">Native, signed, sandboxed. Noyare runs locally — your machine's data never leaves your
+            machine.</p>
+        </div>
+        <div class="specs">
+          <div class="reveal" style="transition-delay: 0ms;">
+            <div class="spec">
+              <h4>Engine</h4>
+              <ul>
+                <li><span>Runtime</span><b>Tauri 2.0</b></li>
+                <li><span>Language</span><b>Rust 1.84</b></li>
+                <li><span>Renderer</span><b>WebView2 · WKWebView</b></li>
+                <li><span>Binary size</span><b>~18 MB</b></li>
+                <li><span>RAM idle</span><b>~40 MB</b></li>
+              </ul>
+            </div>
+          </div>
+          <div class="reveal" style="transition-delay: 80ms;">
+            <div class="spec">
+              <h4>Platforms</h4>
+              <ul>
+                <li><span>Windows</span><b>10 · 11</b></li>
+                <li><span>macOS</span><b>13+ Universal</b></li>
+                <li><span>Linux</span><b>x86_64 · ARM64</b></li>
+                <li><span>Distribution</span><b>Microsoft Store</b></li>
+                <li><span>License</span><b>Apache-2.0</b></li>
+              </ul>
+            </div>
+          </div>
+          <div class="reveal" style="transition-delay: 160ms;">
+            <div class="spec">
+              <h4>Privacy</h4>
+              <ul>
+                <li><span>Telemetry</span><b>none</b></li>
+                <li><span>Network calls</span><b>0 outbound</b></li>
+                <li><span>Updates</span><b>Store-managed</b></li>
+                <li><span>Logs</span><b>local only</b></li>
+                <li><span>Sandbox</span><b>verified</b></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Footer -->
+    <section class="container" id="download">
+      <div class="cta">
+        <div class="cta-inner">
+          <div class="reveal">
+            <span class="section-eyebrow"><span class="num">18</span>GET IT</span>
+          </div>
+          <div class="reveal" style="transition-delay: 60ms;">
+            <h2>Watch your machine. <em>Right now.</em></h2>
+          </div>
+          <div class="reveal" style="transition-delay: 120ms;">
+            <p>Free, secure, native. Drops in under 10 seconds and starts streaming immediately.</p>
+          </div>
+          <div class="reveal" style="transition-delay: 180ms;">
+            <div class="cta-actions">
+              <button class="btn-primary"
+                onclick="window.open('https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare', '_blank')">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                  style="margin-right: 4px;">
+                  <path d="M12 3v12M6 11l6 6 6-6M5 21h14"></path>
+                </svg>
+                Get it from Microsoft Store
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-inner">
+          <div>
+            <a class="brand" href="index.html">
+              <img src="./logo.png" alt="Noyare Logo" style="width: 24px; height: 24px; border-radius: 6px;">
+              NOYARE
+            </a>
+            <p style="margin-top: 16px; color: var(--fg-mute); font-size: 13.5px; max-width: 36ch;">A forensic system
+              monitor. Built locally, runs locally, stays locally.</p>
+          </div>
+          <div>
+            <h5>Product</h5>
+            <ul>
+              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="processes.html">Processes</a></li>
+              <li><a href="ports.html">Ports</a></li>
+              <li><a href="network.html">Network</a></li>
+              <li><a href="storage.html">Storage</a></li>
+              <li><a href="proxy.html">Proxy</a></li>
+              <li><a href="memory.html">Memory</a></li>
+              <li><a href="startup.html">Startup</a></li>
+              <li><a href="insomnia.html">Keep Awake</a></li>
+              <li><a href="battery.html">Battery</a></li>
+              <li><a href="tweaks.html">Tweaks</a></li>
+              <li><a href="tunnels.html">Tunnels</a></li>
+              <li><a href="quicklook.html">Quick Look</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Resources</h5>
+            <ul>
+              <li>Documentation</li>
+              <li>Changelog</li>
+              <li>Roadmap</li>
+              <li><a href="https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare" target="_blank"
+                  rel="noopener noreferrer">Microsoft Store</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Project</h5>
+            <ul>
+              <li>About</li>
+              <li>License</li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li>Contact</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-meta">
+          <span>NOYARE © 2026 · APACHE-2.0</span>
+          <span>BUILT IN RUST · DESIGNED IN THE OPEN</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
   <script src="home-bits.js"></script>
   <script src="home-features.js"></script>
   <script src="home-app.js"></script>

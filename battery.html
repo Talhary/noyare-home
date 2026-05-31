@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Noyare Battery — Precision Power Telemetry & Battery Health Auditor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Monitor laptop battery wear levels, cycles, voltages, and live discharge rates in Watts. Generate detailed HTML diagnostic reports natively in Noyare.">
+  <link rel="icon" type="image/png" href="./favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="home.css">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+  <style>
+    /* Custom page-specific Battery Layout styles */
+    .battery-register-layout {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: 36px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 1024px) {
+      .battery-register-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .register-card {
+      background: var(--bg-elev);
+      border: 1px solid var(--line-soft);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);
+    }
+    .register-card h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--teal);
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    .register-card p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--fg-mute);
+      margin-bottom: 24px;
+    }
+    .hw-register-matrix {
+      background: oklch(0.12 0.01 240);
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      padding: 20px;
+      margin: 20px 0;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .hw-reg-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .hw-reg-row:last-child {
+      border: 0;
+    }
+    .hw-reg-name {
+      color: var(--fg-ghost);
+    }
+    .hw-reg-value {
+      color: var(--fg);
+    }
+    .section-anchor-box {
+      background: var(--bg-elev);
+      border: 1px solid var(--line-soft);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);
+      margin-bottom: 80px;
+    }
+    .section-anchor-box h3 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--teal);
+      margin-top: 0;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- Aurora background elements -->
+    <div class="bg-fx" aria-hidden="true">
+      <div class="bg-grid"></div>
+      <div class="bg-glow t"></div>
+      <div class="bg-glow v"></div>
+    </div>
+
+    <!-- Floating Glass Nav -->
+    <nav class="nav">
+      <div class="container nav-inner">
+        <a class="brand" href="index.html">
+          <img src="./logo.png" alt="Noyare Logo" style="width: 24px; height: 24px; border-radius: 6px;">
+          NOYARE
+        </a>
+        <div class="nav-links">
+          <a class="nav-link" href="index.html">Home</a>
+          <div class="nav-dropdown">
+            <a class="nav-link" style="cursor: pointer;">Features ▾</a>
+            <div class="dropdown-menu">
+              <a href="dashboard.html" class="dropdown-item">📊 Dashboard</a>
+              <a href="processes.html" class="dropdown-item">⚙️ Processes</a>
+              <a href="ports.html" class="dropdown-item">🔌 Sockets & Ports</a>
+              <a href="network.html" class="dropdown-item">📡 DNS Sniffer</a>
+              <a href="storage.html" class="dropdown-item">💾 Disk Storage</a>
+              <a href="proxy.html" class="dropdown-item">🛡️ HTTPS Proxy</a>
+              <a href="memory.html" class="dropdown-item">🧠 RAM Optimizer</a>
+              <a href="startup.html" class="dropdown-item">🚀 Startup Apps</a>
+              <a href="insomnia.html" class="dropdown-item">☕ Keep Awake</a>
+              <a href="battery.html" class="dropdown-item">🔋 Battery Telemetry</a>
+              <a href="tweaks.html" class="dropdown-item">🔧 OS Tweaks</a>
+              <a href="tunnels.html" class="dropdown-item">🌐 Cloudflare Tunnel</a>
+              <a href="quicklook.html" class="dropdown-item">🔍 Spacebar Quick Look</a>
+            </div>
+          </div>
+          <a class="nav-link" href="index.html#specs">Specs</a>
+        </div>
+        <a class="nav-cta" href="https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare" target="_blank" rel="noopener noreferrer">
+          Get Noyare
+        </a>
+      </div>
+    </nav>
+
+    <!-- Subpage Hero -->
+    <header class="container subpage-hero">
+      <span class="hero-eyebrow"><span class="live-dot"></span>FEATURE 10 · BATTERY TELEMETRY</span>
+      <h1>Precision power <span>telemetry HUD.</span></h1>
+      <p class="lede">Track design capacity, live discharge flow rates, active voltages, and generate standard battery health reports with one click.</p>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container">
+      <div class="battery-register-layout">
+        <!-- Register Card -->
+        <div class="register-card">
+          <h2>Modern Laptop Power Observability</h2>
+          <p>
+            Operating systems hide battery health data behind multi-layer settings. Noyare's Battery Telemetry Suite exposes your system's power envelope, aggregating critical hardware metrics.
+          </p>
+
+          <!-- HW Register Block -->
+          <div class="hw-register-matrix">
+            <div style="font-size: 10px; color: var(--teal); margin-bottom: 8px; font-weight: 600;">ACPI BATTERY REGISTER TELEMETRY</div>
+            <div class="hw-reg-row">
+              <span class="hw-reg-name">REG_DESIGN_CAPACITY</span>
+              <span class="hw-reg-value">69,997 mWh</span>
+            </div>
+            <div class="hw-reg-row">
+              <span class="hw-reg-name">REG_FULL_CHARGE_CAPACITY</span>
+              <span class="hw-reg-value">65,510 mWh</span>
+            </div>
+            <div class="hw-reg-row">
+              <span class="hw-reg-name">REG_CURRENT_CHARGE_LEVEL</span>
+              <span class="hw-reg-value">92.4%</span>
+            </div>
+            <div class="hw-reg-row">
+              <span class="hw-reg-name">REG_HARDWARE_WEAR_LEVEL</span>
+              <span class="hw-reg-value">6.41%</span>
+            </div>
+            <div class="hw-reg-row">
+              <span class="hw-reg-name">REG_TEMPERATURE_SENSOR</span>
+              <span class="hw-reg-value">34.8°C</span>
+            </div>
+          </div>
+
+          <p style="font-size: 14.5px; color: var(--fg-mute); margin-top: 10px; line-height: 1.5;">
+            Traces battery cycle wear logs continuously and builds beautifully formatted static HTML diagnostic reports with one tap.
+          </p>
+        </div>
+
+        <!-- Interactive Test UI Section -->
+        <section id="test-ui" class="stage-container" style="background: var(--bg-elev); border-radius: 20px; border: 1px solid var(--line-soft); padding: 24px; box-shadow: 0 12px 30px oklch(0 0 0 / 0.3);">
+          <div style="font-family: var(--mono); font-size: 10px; color: var(--teal); background: var(--teal-soft); padding: 4px 8px; border-radius: 4px; margin-bottom: 12px; display: inline-block;">INTERACTIVE TEST CONSOLE</div>
+          <div id="feature-demo"></div>
+        </section>
+      </div>
+
+      <!-- How it Works Section -->
+      <section id="how-it-works" class="section-anchor-box">
+        <h3>🔋 How the Battery Diagnostics Engine Works</h3>
+        <p style="font-size: 14.5px; line-height: 1.6; color: var(--fg-mute);">
+          Noyare queries laptop power components natively at the hardware driver level:
+        </p>
+        <ul style="color: var(--fg-mute); font-size: 14px; margin-top: 14px; padding-left: 20px;">
+          <li style="margin-bottom: 8px;"><b>Low-Level OS API Calls:</b> On Windows, the Rust backend invokes the Setup Device APIs (like <code>SetupDiGetClassDevsW</code> with <code>GUID_DEVICE_BATTERY</code>) to query the device path, then sends low-level IOCTL commands to fetch capacity states.</li>
+          <li style="margin-bottom: 8px;"><b>Command Line Auditor:</b> Fallback calls natively trigger <code>powercfg /batteryreport</code> commands, parsing and formatting diagnostic tables smoothly in the background.</li>
+          <li style="margin-bottom: 8px;"><b>Wear Tracking Metrics:</b> Analyzes the ratio of factory design capacity vs current maximum full charge state continuously, ensuring clear visibility into battery life decay.</li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-inner">
+          <div>
+            <a class="brand" href="index.html"><img src="./logo.png" alt="Noyare Logo" style="width: 24px; height: 24px; border-radius: 6px;">NOYARE</a>
+            <p style="margin-top: 16px; color: var(--fg-mute); font-size: 13.5px; max-width: 36ch;">
+              A forensic system monitor. Built locally, runs locally, stays locally.
+            </p>
+          </div>
+          <div>
+            <h5>Product</h5>
+            <ul>
+              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="processes.html">Processes</a></li>
+              <li><a href="ports.html">Ports</a></li>
+              <li><a href="network.html">Network</a></li>
+              <li><a href="storage.html">Storage</a></li>
+              <li><a href="proxy.html">Proxy</a></li>
+              <li><a href="memory.html">Memory</a></li>
+              <li><a href="startup.html">Startup</a></li>
+              <li><a href="insomnia.html">Keep Awake</a></li>
+              <li><a href="battery.html">Battery</a></li>
+              <li><a href="tweaks.html">Tweaks</a></li>
+              <li><a href="tunnels.html">Tunnels</a></li>
+              <li><a href="quicklook.html">Quick Look</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Resources</h5>
+            <ul>
+              <li>Documentation</li>
+              <li>Changelog</li>
+              <li>Roadmap</li>
+              <li><a href="https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare" target="_blank" rel="noopener noreferrer">Microsoft Store</a></li>
+            </ul>
+          </div>
+          <div>
+            <h5>Project</h5>
+            <ul>
+              <li>About</li>
+              <li>License</li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+              <li>Contact</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-meta">
+          <span>NOYARE © 2026 · APACHE-2.0</span>
+          <span>BUILT IN RUST · DESIGNED IN THE OPEN</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Loading React Widgets -->
+  <script src="home-bits.js"></script>
+  <script src="home-features.js"></script>
+  <script>
+    ReactDOM.createRoot(document.getElementById("feature-demo")).render(
+      React.createElement(window.StageBattery)
+    );
+  </script>
+</body>
+</html>
