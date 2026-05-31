@@ -42,15 +42,22 @@ function FeatureIndex() {
     { n: "03", t: "Ports", d: "All listening & established sockets. Risk-classified \u2014 SAFE / EXPOSED / SYSTEM." },
     { n: "04", t: "Network", d: "Active connections + a live DNS sniffer streaming every lookup leaving your box." },
     { n: "05", t: "Storage", d: "Quick cleaner for caches and temp, plus a recursive disk analyzer with treemaps." },
-    { n: "06", t: "Proxy", d: "Local HTTPS proxy \u2014 capture, break on, modify, repeat any request." }
+    { n: "06", t: "Proxy", d: "Local HTTPS proxy \u2014 capture, break on, modify, repeat any request." },
+    { n: "07", t: "Memory", d: "Intelligent Standby List Cleaner (ISLC) engine to purge memory and free RAM." },
+    { n: "08", t: "Startup", d: "Manage startup applications, analyze safety, and configure custom launch delays." },
+    { n: "09", t: "Insomnia", d: "Keep-awake power manager triggered by process watch lists, battery levels, or network." },
+    { n: "10", t: "Battery", d: "Deep telemetry report of wear levels, cycle counts, voltage, and discharge logs." },
+    { n: "11", t: "Tweaks", d: "Windows customization hub for scrollbars, menu delays, snap layouts, and privacy." },
+    { n: "12", t: "Tunnels", d: "Cloudflare tunnel daemon. Tunnel localhost to public domains with traffic metrics." },
+    { n: "13", t: "Quick Look", d: "Instant file previewer (Spacebar hook) for code, images, audio, video, and archives." }
   ];
-  return /* @__PURE__ */ React.createElement("section", { className: "section", id: "features" }, /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement(Reveal, null, /* @__PURE__ */ React.createElement("span", { className: "section-eyebrow" }, /* @__PURE__ */ React.createElement("span", { className: "num" }, "02"), "FEATURES")), /* @__PURE__ */ React.createElement(Reveal, { delay: 60 }, /* @__PURE__ */ React.createElement("h2", null, "Six tools, ", /* @__PURE__ */ React.createElement("em", null, "one window."))), /* @__PURE__ */ React.createElement(Reveal, { delay: 120 }, /* @__PURE__ */ React.createElement("p", { className: "lede" }, "Most monitors are a fragmented mess \u2014 one tab for CPU, one for ports, a different binary for network. Noyare folds the whole investigation surface into a single pane and keeps every signal live.")), /* @__PURE__ */ React.createElement("div", { className: "feature-grid" }, feats.map((f, i) => /* @__PURE__ */ React.createElement(Reveal, { key: i, delay: i * 60 }, /* @__PURE__ */ React.createElement("a", { className: "fi-cell", href: `#${f.t.toLowerCase()}` }, /* @__PURE__ */ React.createElement("span", { className: "num" }, f.n), /* @__PURE__ */ React.createElement("h3", null, f.t), /* @__PURE__ */ React.createElement("p", null, f.d)))))));
+  return /* @__PURE__ */ React.createElement("section", { className: "section", id: "features" }, /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement(Reveal, null, /* @__PURE__ */ React.createElement("span", { className: "section-eyebrow" }, /* @__PURE__ */ React.createElement("span", { className: "num" }, "02"), "FEATURES")), /* @__PURE__ */ React.createElement(Reveal, { delay: 60 }, /* @__PURE__ */ React.createElement("h2", null, "Thirteen tools, ", /* @__PURE__ */ React.createElement("em", null, "one window."))), /* @__PURE__ */ React.createElement(Reveal, { delay: 120 }, /* @__PURE__ */ React.createElement("p", { className: "lede" }, "Most monitors are a fragmented mess \u2014 one tab for CPU, one for ports, a different binary for network. Noyare folds the whole investigation surface into a single pane and keeps every signal live.")), /* @__PURE__ */ React.createElement("div", { className: "feature-grid" }, feats.map((f, i) => /* @__PURE__ */ React.createElement(Reveal, { key: i, delay: i * 60 }, /* @__PURE__ */ React.createElement("a", { className: "fi-cell", href: `#${f.t.toLowerCase()}` }, /* @__PURE__ */ React.createElement("span", { className: "num" }, f.n), /* @__PURE__ */ React.createElement("h3", null, f.t), /* @__PURE__ */ React.createElement("p", null, f.d)))))));
 }
 function Feature({ num, title, kicker, desc, bullets, stage, reverse, id }) {
   return /* @__PURE__ */ React.createElement("section", { className: `feature ${reverse ? "reverse" : ""}`, id }, /* @__PURE__ */ React.createElement("div", { className: "container feature-inner" }, /* @__PURE__ */ React.createElement("div", { className: "feature-text" }, /* @__PURE__ */ React.createElement(Reveal, null, /* @__PURE__ */ React.createElement("div", { className: "feature-num" }, /* @__PURE__ */ React.createElement("span", { className: "bar" }), " ", num, " \xB7 ", kicker)), /* @__PURE__ */ React.createElement(Reveal, { delay: 60 }, /* @__PURE__ */ React.createElement("h3", null, title)), /* @__PURE__ */ React.createElement(Reveal, { delay: 120 }, /* @__PURE__ */ React.createElement("p", { className: "desc" }, desc)), /* @__PURE__ */ React.createElement(Reveal, { delay: 180 }, /* @__PURE__ */ React.createElement("ul", { className: "bullets" }, bullets.map((b, i) => /* @__PURE__ */ React.createElement("li", { key: i }, /* @__PURE__ */ React.createElement(I.check, null), /* @__PURE__ */ React.createElement("span", { dangerouslySetInnerHTML: { __html: b } })))))), /* @__PURE__ */ React.createElement(Reveal, { delay: 120 }, stage)));
 }
 function TweaksStrip() {
-  return /* @__PURE__ */ React.createElement("section", { className: "section", id: "settings" }, /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement(Reveal, null, /* @__PURE__ */ React.createElement("span", { className: "section-eyebrow" }, /* @__PURE__ */ React.createElement("span", { className: "num" }, "09"), "SETTINGS")), /* @__PURE__ */ React.createElement(Reveal, { delay: 60 }, /* @__PURE__ */ React.createElement("h2", null, "Yours, ", /* @__PURE__ */ React.createElement("em", null, "to the millisecond."))), /* @__PURE__ */ React.createElement(Reveal, { delay: 120 }, /* @__PURE__ */ React.createElement("p", { className: "lede" }, "Noyare ships with calm defaults but stays out of your way. Theme, sampling cadence, sniffer behavior, trust evaluation \u2014 pin every knob.")), /* @__PURE__ */ React.createElement("div", { className: "toggles-strip" }, [
+  return /* @__PURE__ */ React.createElement("section", { className: "section", id: "settings" }, /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement(Reveal, null, /* @__PURE__ */ React.createElement("span", { className: "section-eyebrow" }, /* @__PURE__ */ React.createElement("span", { className: "num" }, "16"), "SETTINGS")), /* @__PURE__ */ React.createElement(Reveal, { delay: 60 }, /* @__PURE__ */ React.createElement("h2", null, "Yours, ", /* @__PURE__ */ React.createElement("em", null, "to the millisecond."))), /* @__PURE__ */ React.createElement(Reveal, { delay: 120 }, /* @__PURE__ */ React.createElement("p", { className: "lede" }, "Noyare ships with calm defaults but stays out of your way. Theme, sampling cadence, sniffer behavior, trust evaluation \u2014 pin every knob.")), /* @__PURE__ */ React.createElement("div", { className: "toggles-strip" }, [
     { k: "01", n: "Theme", d: "Dark, light, or follow your OS. Both palettes are first-class.", s: "DARK \xB7 LIGHT" },
     { k: "02", n: "Sidebar style", d: "Full labels or icon-only \u2014 toggle at any time.", s: "LABELS \xB7 ICONS" },
     { k: "03", n: "Sample interval", d: "Default 1.1s. Push to 250ms for forensics or 5s to coast.", s: "0.25s \u2013 5s" },
@@ -62,10 +69,10 @@ function TweaksStrip() {
   ].map((t, i) => /* @__PURE__ */ React.createElement(Reveal, { key: i, delay: i * 50 }, /* @__PURE__ */ React.createElement("div", { className: "toggle-card" }, /* @__PURE__ */ React.createElement("span", { className: "tswatch" }, t.s), /* @__PURE__ */ React.createElement("span", { className: "ti" }, t.k), /* @__PURE__ */ React.createElement("span", { className: "tn" }, t.n), /* @__PURE__ */ React.createElement("span", { className: "td" }, t.d)))))));
 }
 function Specs() {
-  return /* @__PURE__ */ React.createElement("section", { className: "section", id: "specs" }, /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement(Reveal, null, /* @__PURE__ */ React.createElement("span", { className: "section-eyebrow" }, /* @__PURE__ */ React.createElement("span", { className: "num" }, "10"), "SPECS")), /* @__PURE__ */ React.createElement(Reveal, { delay: 60 }, /* @__PURE__ */ React.createElement("h2", null, "Built for ", /* @__PURE__ */ React.createElement("em", null, "your machine."))), /* @__PURE__ */ React.createElement(Reveal, { delay: 120 }, /* @__PURE__ */ React.createElement("p", { className: "lede" }, "Native, signed, sandboxed. Noyare runs locally \u2014 your machine's data never leaves your machine.")), /* @__PURE__ */ React.createElement("div", { className: "specs" }, /* @__PURE__ */ React.createElement(Reveal, null, /* @__PURE__ */ React.createElement("div", { className: "spec" }, /* @__PURE__ */ React.createElement("h4", null, "Engine"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Runtime"), /* @__PURE__ */ React.createElement("b", null, "Tauri 2.0")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Language"), /* @__PURE__ */ React.createElement("b", null, "Rust 1.84")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Renderer"), /* @__PURE__ */ React.createElement("b", null, "WebView2 \xB7 WKWebView")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Binary size"), /* @__PURE__ */ React.createElement("b", null, "~18 MB")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "RAM idle"), /* @__PURE__ */ React.createElement("b", null, "~40 MB"))))), /* @__PURE__ */ React.createElement(Reveal, { delay: 80 }, /* @__PURE__ */ React.createElement("div", { className: "spec" }, /* @__PURE__ */ React.createElement("h4", null, "Platforms"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Windows"), /* @__PURE__ */ React.createElement("b", null, "10 \xB7 11")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "macOS"), /* @__PURE__ */ React.createElement("b", null, "13+ Universal")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Linux"), /* @__PURE__ */ React.createElement("b", null, "x86_64 \xB7 ARM64")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Distribution"), /* @__PURE__ */ React.createElement("b", null, "Microsoft Store")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "License"), /* @__PURE__ */ React.createElement("b", null, "Apache-2.0"))))), /* @__PURE__ */ React.createElement(Reveal, { delay: 160 }, /* @__PURE__ */ React.createElement("div", { className: "spec" }, /* @__PURE__ */ React.createElement("h4", null, "Privacy"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Telemetry"), /* @__PURE__ */ React.createElement("b", null, "none")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Network calls"), /* @__PURE__ */ React.createElement("b", null, "0 outbound")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Updates"), /* @__PURE__ */ React.createElement("b", null, "Store-managed")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Logs"), /* @__PURE__ */ React.createElement("b", null, "local only")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Sandbox"), /* @__PURE__ */ React.createElement("b", null, "verified"))))))));
+  return /* @__PURE__ */ React.createElement("section", { className: "section", id: "specs" }, /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement(Reveal, null, /* @__PURE__ */ React.createElement("span", { className: "section-eyebrow" }, /* @__PURE__ */ React.createElement("span", { className: "num" }, "17"), "SPECS")), /* @__PURE__ */ React.createElement(Reveal, { delay: 60 }, /* @__PURE__ */ React.createElement("h2", null, "Built for ", /* @__PURE__ */ React.createElement("em", null, "your machine."))), /* @__PURE__ */ React.createElement(Reveal, { delay: 120 }, /* @__PURE__ */ React.createElement("p", { className: "lede" }, "Native, signed, sandboxed. Noyare runs locally \u2014 your machine's data never leaves your machine.")), /* @__PURE__ */ React.createElement("div", { className: "specs" }, /* @__PURE__ */ React.createElement(Reveal, null, /* @__PURE__ */ React.createElement("div", { className: "spec" }, /* @__PURE__ */ React.createElement("h4", null, "Engine"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Runtime"), /* @__PURE__ */ React.createElement("b", null, "Tauri 2.0")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Language"), /* @__PURE__ */ React.createElement("b", null, "Rust 1.84")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Renderer"), /* @__PURE__ */ React.createElement("b", null, "WebView2 \xB7 WKWebView")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Binary size"), /* @__PURE__ */ React.createElement("b", null, "~18 MB")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "RAM idle"), /* @__PURE__ */ React.createElement("b", null, "~40 MB"))))), /* @__PURE__ */ React.createElement(Reveal, { delay: 80 }, /* @__PURE__ */ React.createElement("div", { className: "spec" }, /* @__PURE__ */ React.createElement("h4", null, "Platforms"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Windows"), /* @__PURE__ */ React.createElement("b", null, "10 \xB7 11")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "macOS"), /* @__PURE__ */ React.createElement("b", null, "13+ Universal")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Linux"), /* @__PURE__ */ React.createElement("b", null, "x86_64 \xB7 ARM64")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Distribution"), /* @__PURE__ */ React.createElement("b", null, "Microsoft Store")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "License"), /* @__PURE__ */ React.createElement("b", null, "Apache-2.0"))))), /* @__PURE__ */ React.createElement(Reveal, { delay: 160 }, /* @__PURE__ */ React.createElement("div", { className: "spec" }, /* @__PURE__ */ React.createElement("h4", null, "Privacy"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Telemetry"), /* @__PURE__ */ React.createElement("b", null, "none")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Network calls"), /* @__PURE__ */ React.createElement("b", null, "0 outbound")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Updates"), /* @__PURE__ */ React.createElement("b", null, "Store-managed")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Logs"), /* @__PURE__ */ React.createElement("b", null, "local only")), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("span", null, "Sandbox"), /* @__PURE__ */ React.createElement("b", null, "verified"))))))));
 }
 function CTAFooter() {
-  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("section", { className: "container", id: "download" }, /* @__PURE__ */ React.createElement("div", { className: "cta" }, /* @__PURE__ */ React.createElement("div", { className: "cta-inner" }, /* @__PURE__ */ React.createElement(Reveal, null, /* @__PURE__ */ React.createElement("span", { className: "section-eyebrow" }, /* @__PURE__ */ React.createElement("span", { className: "num" }, "11"), "GET IT")), /* @__PURE__ */ React.createElement(Reveal, { delay: 60 }, /* @__PURE__ */ React.createElement("h2", null, "Watch your machine. ", /* @__PURE__ */ React.createElement("em", null, "Right now."))), /* @__PURE__ */ React.createElement(Reveal, { delay: 120 }, /* @__PURE__ */ React.createElement("p", null, "Free, secure, native. Drops in under 10 seconds and starts streaming immediately.")), /* @__PURE__ */ React.createElement(Reveal, { delay: 180 }, /* @__PURE__ */ React.createElement("div", { className: "cta-actions" }, /* @__PURE__ */ React.createElement("button", { className: "btn-primary", onClick: () => window.open("https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare", "_blank") }, /* @__PURE__ */ React.createElement(I.download, null), " Get it from Microsoft Store")))))), /* @__PURE__ */ React.createElement("footer", null, /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement("div", { className: "footer-inner" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("a", { className: "brand", href: "#top" }, /* @__PURE__ */ React.createElement("img", { src: "./logo.png", alt: "Noyare Logo", style: { width: "24px", height: "24px", borderRadius: "6px" } }), "NOYARE"), /* @__PURE__ */ React.createElement("p", { style: { marginTop: 16, color: "var(--fg-mute)", fontSize: 13.5, maxWidth: "36ch" } }, "A forensic system monitor. Built locally, runs locally, stays locally.")), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h5", null, "Product"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, "Dashboard"), /* @__PURE__ */ React.createElement("li", null, "Processes"), /* @__PURE__ */ React.createElement("li", null, "Ports"), /* @__PURE__ */ React.createElement("li", null, "Network"), /* @__PURE__ */ React.createElement("li", null, "Storage"), /* @__PURE__ */ React.createElement("li", null, "Proxy"))), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h5", null, "Resources"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, "Documentation"), /* @__PURE__ */ React.createElement("li", null, "Changelog"), /* @__PURE__ */ React.createElement("li", null, "Roadmap"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("a", { href: "https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare", target: "_blank", rel: "noopener noreferrer", style: { color: "inherit", textDecoration: "none" } }, "Microsoft Store")))), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h5", null, "Project"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, "About"), /* @__PURE__ */ React.createElement("li", null, "License"), /* @__PURE__ */ React.createElement("li", null, "Privacy"), /* @__PURE__ */ React.createElement("li", null, "Contact")))), /* @__PURE__ */ React.createElement("div", { className: "footer-meta" }, /* @__PURE__ */ React.createElement("span", null, "NOYARE \xA9 2026 \xB7 APACHE-2.0"), /* @__PURE__ */ React.createElement("span", null, "BUILT IN RUST \xB7 DESIGNED IN THE OPEN")))));
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("section", { className: "container", id: "download" }, /* @__PURE__ */ React.createElement("div", { className: "cta" }, /* @__PURE__ */ React.createElement("div", { className: "cta-inner" }, /* @__PURE__ */ React.createElement(Reveal, null, /* @__PURE__ */ React.createElement("span", { className: "section-eyebrow" }, /* @__PURE__ */ React.createElement("span", { className: "num" }, "18"), "GET IT")), /* @__PURE__ */ React.createElement(Reveal, { delay: 60 }, /* @__PURE__ */ React.createElement("h2", null, "Watch your machine. ", /* @__PURE__ */ React.createElement("em", null, "Right now."))), /* @__PURE__ */ React.createElement(Reveal, { delay: 120 }, /* @__PURE__ */ React.createElement("p", null, "Free, secure, native. Drops in under 10 seconds and starts streaming immediately.")), /* @__PURE__ */ React.createElement(Reveal, { delay: 180 }, /* @__PURE__ */ React.createElement("div", { className: "cta-actions" }, /* @__PURE__ */ React.createElement("button", { className: "btn-primary", onClick: () => window.open("https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare", "_blank") }, /* @__PURE__ */ React.createElement(I.download, null), " Get it from Microsoft Store")))))), /* @__PURE__ */ React.createElement("footer", null, /* @__PURE__ */ React.createElement("div", { className: "container" }, /* @__PURE__ */ React.createElement("div", { className: "footer-inner" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("a", { className: "brand", href: "#top" }, /* @__PURE__ */ React.createElement("img", { src: "./logo.png", alt: "Noyare Logo", style: { width: "24px", height: "24px", borderRadius: "6px" } }), "NOYARE"), /* @__PURE__ */ React.createElement("p", { style: { marginTop: 16, color: "var(--fg-mute)", fontSize: 13.5, maxWidth: "36ch" } }, "A forensic system monitor. Built locally, runs locally, stays locally.")), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h5", null, "Product"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, "Dashboard"), /* @__PURE__ */ React.createElement("li", null, "Processes"), /* @__PURE__ */ React.createElement("li", null, "Ports"), /* @__PURE__ */ React.createElement("li", null, "Network"), /* @__PURE__ */ React.createElement("li", null, "Storage"), /* @__PURE__ */ React.createElement("li", null, "Memory"), /* @__PURE__ */ React.createElement("li", null, "Startup"), /* @__PURE__ */ React.createElement("li", null, "Keep Awake"), /* @__PURE__ */ React.createElement("li", null, "Battery"), /* @__PURE__ */ React.createElement("li", null, "Tweaks"), /* @__PURE__ */ React.createElement("li", null, "Tunnels"), /* @__PURE__ */ React.createElement("li", null, "Quick Look"))), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h5", null, "Resources"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, "Documentation"), /* @__PURE__ */ React.createElement("li", null, "Changelog"), /* @__PURE__ */ React.createElement("li", null, "Roadmap"), /* @__PURE__ */ React.createElement("li", null, /* @__PURE__ */ React.createElement("a", { href: "https://apps.microsoft.com/detail/9PL83RF36NP4?hl=en-us&gl=US&ocid=pdpshare", target: "_blank", rel: "noopener noreferrer", style: { color: "inherit", textDecoration: "none" } }, "Microsoft Store")))), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h5", null, "Project"), /* @__PURE__ */ React.createElement("ul", null, /* @__PURE__ */ React.createElement("li", null, "About"), /* @__PURE__ */ React.createElement("li", null, "License"), /* @__PURE__ */ React.createElement("li", null, "Privacy"), /* @__PURE__ */ React.createElement("li", null, "Contact")))), /* @__PURE__ */ React.createElement("div", { className: "footer-meta" }, /* @__PURE__ */ React.createElement("span", null, "NOYARE \xA9 2026 \xB7 APACHE-2.0"), /* @__PURE__ */ React.createElement("span", null, "BUILT IN RUST \xB7 DESIGNED IN THE OPEN")))));
 }
 function BgFx() {
   return /* @__PURE__ */ React.createElement("div", { className: "bg-fx", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("div", { className: "bg-grid" }), /* @__PURE__ */ React.createElement("div", { className: "bg-glow t" }), /* @__PURE__ */ React.createElement("div", { className: "bg-glow v" }), /* @__PURE__ */ React.createElement("div", { className: "bg-glow c" }));
@@ -169,6 +176,121 @@ function App() {
         "<b>Self-signed CA</b> \u2014 export, install, rotate at any moment."
       ],
       stage: /* @__PURE__ */ React.createElement(StageProxy, null)
+    }
+  ), /* @__PURE__ */ React.createElement(
+    Feature,
+    {
+      num: "09",
+      id: "memory",
+      kicker: "MEMORY CLEANER",
+      title: "Optimize system memory instantly.",
+      desc: "Standby memory lists and cached pages can clog your system, leaving less active RAM. Noyare's RAM Cleaner introduces an Intelligent Standby List Cleaner (ISLC) engine to automatically free up caches when memory thresholds are hit, alongside manual working set trimming.",
+      bullets: [
+        "<b>ISLC Engine</b> \u2014 Auto-purges standby cache based on free RAM limits.",
+        "<b>Working Set Trimmer</b> \u2014 Reclaims active process memory buffers safely.",
+        "<b>Live Cache Tally</b> \u2014 Visualizes RAM consumption across system categories.",
+        "<b>Low Overhead</b> \u2014 Runs in the background without stealing CPU cycles."
+      ],
+      stage: /* @__PURE__ */ React.createElement(StageMemory, null)
+    }
+  ), /* @__PURE__ */ React.createElement(
+    Feature,
+    {
+      num: "10",
+      id: "startup",
+      kicker: "STARTUP APPS",
+      reverse: true,
+      title: "Control your boot experience.",
+      desc: "Heavy login programs increase startup latency. Noyare lists all registered startup apps in registry keys and startup folders, computes their impact, and lets you disable, delete, or configure custom launch delays so your computer boots instantly.",
+      bullets: [
+        "<b>Launch Delays</b> \u2014 Postpone heavy boot items to ease initial CPU load.",
+        "<b>Registry Analyzer</b> \u2014 Scans standard and advanced system startup paths.",
+        "<b>Trust Indicators</b> \u2014 Flags unsigned startup binaries automatically.",
+        "<b>Toggle & Delete</b> \u2014 Safely enable, disable, or delete boot tasks."
+      ],
+      stage: /* @__PURE__ */ React.createElement(StageStartup, null)
+    }
+  ), /* @__PURE__ */ React.createElement(
+    Feature,
+    {
+      num: "11",
+      id: "keepawake",
+      kicker: "INSOMNIA MODE",
+      title: "Your machine stays awake, on your terms.",
+      desc: "Prevent system sleep or screen display timeout during long renders, downloads, or builds. Set simple continuous overrides or build advanced process-based rules, network transfer limits, and battery safeguard thresholds.",
+      bullets: [
+        "<b>Continuous Wake</b> \u2014 Prevent screen and sleep cycles indefinitely.",
+        "<b>Process Watch</b> \u2014 Only keep awake while specific processes are running.",
+        "<b>Battery Threshold</b> \u2014 Automatically deactivate below set battery power.",
+        "<b>Network Guard</b> \u2014 Keep awake during active file transfers."
+      ],
+      stage: /* @__PURE__ */ React.createElement(StageKeepAwake, null)
+    }
+  ), /* @__PURE__ */ React.createElement(
+    Feature,
+    {
+      num: "12",
+      id: "battery",
+      kicker: "BATTERY DIAGNOSTICS",
+      reverse: true,
+      title: "Precision power telemetry.",
+      desc: "Monitor battery wear level, charge cycles, health status, and live discharge rates. Keep track of battery capacity history logs over time and generate a clean Windows battery diagnostics report in one click.",
+      bullets: [
+        "<b>Wear Telemetry</b> \u2014 Track design capacity vs current full charge capacity.",
+        "<b>Discharge Rates</b> \u2014 Watch energy flow in Watts under different system loads.",
+        "<b>History Logs</b> \u2014 Maintain historic records of battery level and health.",
+        "<b>Report Generator</b> \u2014 Build and export complete HTML diagnostic sheets."
+      ],
+      stage: /* @__PURE__ */ React.createElement(StageBattery, null)
+    }
+  ), /* @__PURE__ */ React.createElement(
+    Feature,
+    {
+      num: "13",
+      id: "tweaks",
+      kicker: "SYSTEM TWEAKS",
+      title: "Personalize and optimize your desktop.",
+      desc: "Noyare offers a dashboard of deep operating system tweaks. Shrink or expand scrollbars, configure hover focus timeouts, tweak explorer file display speeds, and disable background telemetry trackers.",
+      bullets: [
+        "<b>Scrollbar Customizer</b> \u2014 Edit visual scrollbar widths across the OS.",
+        "<b>Focus Timeouts</b> \u2014 Control menu delay reaction speeds under the mouse.",
+        "<b>Telemetry Block</b> \u2014 Toggles to disable background usage logging.",
+        "<b>Explorer Speedups</b> \u2014 Registry-based response timing enhancements."
+      ],
+      stage: /* @__PURE__ */ React.createElement(StageTweaks, null)
+    }
+  ), /* @__PURE__ */ React.createElement(
+    Feature,
+    {
+      num: "14",
+      id: "tunnels",
+      kicker: "LOCAL TUNNELS",
+      reverse: true,
+      title: "Expose your ports instantly.",
+      desc: "Test webhooks, showcase progress, or route traffic securely. Noyare encapsulates Cloudflare tunnel processes, allowing you to spin up secure public tunnels for local ports and monitor live bandwidth and latency stats.",
+      bullets: [
+        "<b>Zero Configuration</b> \u2014 Spin up cloudflared instances in a single tap.",
+        "<b>Public URLs</b> \u2014 Mapped to secure HTTPS trycloudflare subdomains.",
+        "<b>Bandwidth Logs</b> \u2014 Live data throughput meters showing Up/Down stats.",
+        "<b>Process Shield</b> \u2014 Native process management wraps the tunnel daemon."
+      ],
+      stage: /* @__PURE__ */ React.createElement(StageTunnel, null)
+    }
+  ), /* @__PURE__ */ React.createElement(
+    Feature,
+    {
+      num: "15",
+      id: "quicklook",
+      kicker: "QUICK LOOK",
+      title: "Spacebar file preview, native and fast.",
+      desc: "Select a file in Windows Explorer, tap the Spacebar, and instantly see its contents in a translucent, fluid overlay. Works for text files (with live editing and saving), images (with cropping), audio, video, and archive structures.",
+      bullets: [
+        "<b>Spacebar Hook</b> \u2014 Low-level keyboard hook binds preview to Spacebar.",
+        "<b>Code Editor</b> \u2014 View code with syntax highlighting, edit, and save changes.",
+        "<b>Image Cropper</b> \u2014 Crop, inspect, and export image assets instantly.",
+        "<b>Archive Reader</b> \u2014 List files inside zip and tar.gz files without unpacking."
+      ],
+      stage: /* @__PURE__ */ React.createElement(StageQuickLook, null)
     }
   ), /* @__PURE__ */ React.createElement(TweaksStrip, null), /* @__PURE__ */ React.createElement(Specs, null), /* @__PURE__ */ React.createElement(CTAFooter, null));
 }
